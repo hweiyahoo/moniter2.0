@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 轮询设置 -->
+<sqlMap namespace="reqpollcfg">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 轮询的直放站站点列表 -->
+	<select id="queryChoisedRepeaterForList" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			t.repeaterid, 
+			t.protype, 
+			t1.proname,
+			t.devicetype, 
+			t2.hardname,
+			t.stationid,
+			t.stationname, 
+			t.statsubid,
+			t.province,
+			t3.sitename as provincename,
+			t.city,
+			t4.sitename as cityname,
+			t.channelname, 
+			t.channelcode	
+		FROM    repeaterinfo t
+			LEFT JOIN protocol t1 ON t.ProType = t1.ProType
+			LEFT JOIN devicetype t2 ON t2.DeviceType = t.DeviceType AND t2.ProType = t1.ProType
+			LEFT JOIN site t3 ON t3.sitecode = t.Province AND ParentSite = '00' and t3.type=1
+			LEFT JOIN site t4 ON t4.sitecode = t.City AND t4.ParentSite = t.Province and t4.type=1
+		where 1=1 
+			AND t.repeaterid IN (SELECT repeaterid FROM circle WHERE pollPloyID = #pollployid#  )
+	</select>
+	
+	<!-- 轮询的直放站站点总记录数 -->
+	<select id="queryChoisedRepeaterForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+			count(1)
+		FROM    repeaterinfo t
+		where 1=1 
+			AND t.repeaterid IN (SELECT repeaterid FROM circle WHERE pollPloyID = #pollployid#  )
+	</select>
+	
+	<!-- 新增 轮询的 直放站站点 -->
+	<insert id="insertChoisedRepeater" parameterClass="dto">
+		INSERT INTO circle 
+			(
+				RepeaterID, 
+				ChannelName, 
+				ChannelCode, 
+				pollPloyID
+			)
+			VALUES
+			(
+				#repeaterid#, 
+				#channelname#, 
+				#channelcode#, 
+				#pollployid#
+			)
+	</insert>
+	
+	<!-- 删除 轮询的 直放站站点 -->
+	<delete id="deleteChoisedRepeater" parameterClass="dto">
+		DELETE FROM circle where pollPloyID = #pollployid#
+		<dynamic>
+			<isNotEmpty property="repeaterid"> 
+				and RepeaterID = #repeaterid# 
+			</isNotEmpty>
+		</dynamic>
+	</delete>
+	
+	<!-- 列表 提供选择的直放站 -->
+	<select id="queryRepeaterForList" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			t.repeaterid, 
+			t.protype, 
+			t1.proname,
+			t.devicetype, 
+			t2.hardname,
+			t.stationid,
+			t.stationname, 
+			t.statsubid,
+			t.province,
+			t3.sitename as provincename,
+			t.city,
+			t4.sitename as cityname,
+			t.channelname, 
+			t.channelcode	
+		FROM    repeaterinfo t
+			LEFT JOIN protocol t1 ON t.ProType = t1.ProType
+			LEFT JOIN devicetype t2 ON t2.DeviceType = t.DeviceType AND t2.ProType = t1.ProType
+			LEFT JOIN site t3 ON t3.sitecode = t.Province AND ParentSite = '00' and t3.type=1
+			LEFT JOIN site t4 ON t4.sitecode = t.City AND t4.ParentSite = t.Province and t4.type=1
+		where 1=1 
+			AND t.repeaterid NOT IN (SELECT repeaterid FROM circle WHERE pollPloyID = #pollployid#)
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and t.protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="devicetype"> 
+				and t.DeviceType = #devicetype#  
+			</isNotEmpty>
+			<isNotEmpty property="province"> 
+				and t.Province = #province#  
+			</isNotEmpty>
+			<isNotEmpty property="city"> 
+				and t.City = #city#  
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="queryRepeaterForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+			count(1)
+		FROM    repeaterinfo t
+		where 1=1 
+			AND t.repeaterid NOT IN (SELECT repeaterid FROM circle WHERE pollPloyID = #pollployid#)
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and t.protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="devicetype"> 
+				and t.DeviceType = #devicetype#  
+			</isNotEmpty>
+			<isNotEmpty property="province"> 
+				and t.Province = #province#  
+			</isNotEmpty>
+			<isNotEmpty property="city"> 
+				and t.City = #city#  
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 轮询策略列表 -->
+	<select id="queryPollployForList" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			t.pollPloyID,
+			DATE_FORMAT(t.pollBeginTime,'%Y-%m-%d %T') AS pollBeginTime,
+			t.pollIntervalTime,
+			t.pollPloyName,
+			t.pollTimes,
+			t.flag,	
+			t.note,
+			t.protype, 
+			t1.proname,
+			t.devicetype, 
+			t2.hardname,
+			moncodeids,
+			pollstatus
+		FROM pollploy t 
+			LEFT JOIN protocol t1 ON t.ProType = t1.ProType
+			LEFT JOIN devicetype t2 ON t2.DeviceType = t.DeviceType AND t2.ProType = t1.ProType
+			LEFT JOIN pollploy_moncode using(pollPloyID)
+		WHERE 1 = 1 
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and t.protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="devicetype"> 
+				and t.devicetype = #devicetype#  
+			</isNotEmpty>
+			<isNotEmpty property="pollstatus"> 
+				and pollstatus = #pollstatus#  
+			</isNotEmpty>
+			<isNotEmpty property="flag"> 
+				and flag = #flag#  
+			</isNotEmpty>
+			<isNotEmpty property="pollbegintime">
+			<![CDATA[ and  pollbegintime >= cast(#pollbegintime# as DATETIME) ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="queryPollployForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		select count(1) from pollploy 
+		WHERE 1 = 1 
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="devicetype"> 
+				and devicetype = #devicetype#  
+			</isNotEmpty>
+			<isNotEmpty property="pollstatus"> 
+				and pollstatus = #pollstatus#  
+			</isNotEmpty>
+			<isNotEmpty property="flag"> 
+				and flag = #flag#  
+			</isNotEmpty>
+			<isNotEmpty property="pollbegintime">
+			<![CDATA[ and  pollbegintime >= cast(#pollbegintime# as DATETIME) ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 检测策略名称是否重名 -->
+	<select id="checkPloyName" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT count(1) FROM pollploy where pollployname = #pollployname# and pollPloyID != #pollployid#
+	</select>
+	
+	<delete id="deletePollploy" parameterClass="dto">
+		DELETE FROM pollploy where pollPloyID = #pollployid#
+	</delete>
+	
+	<insert id="insertPollploy" parameterClass="dto">
+		INSERT INTO pollploy 
+			(
+				pollBeginTime, 
+				pollPloyName,
+				flag,
+				note,
+				protype, 
+				devicetype,
+				pollstatus
+			)
+			VALUES
+			(
+				#pollbegintime#, 
+				#pollployname#,
+				#flag#,
+				#note#,
+				#protype#,
+				#devicetype#,
+				'0'
+			)
+	</insert>
+
+	<update id="updatePollploy" parameterClass="dto">
+		UPDATE pollploy 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="pollbegintime">
+				pollbegintime = #pollbegintime#
+			</isNotNull>
+			<isNotNull prepend="," property="pollintervaltime">
+				pollintervaltime = #pollintervaltime#
+			</isNotNull>
+			<isNotNull prepend="," property="polltimes">
+				polltimes = #polltimes#
+			</isNotNull>
+			<isNotNull prepend="," property="note">
+				note = #note#
+			</isNotNull>
+			<isNotNull prepend="," property="pollployname">
+				pollployname = #pollployname#
+			</isNotNull>
+			<isNotNull prepend="," property="flag">
+				flag = #flag# 
+			</isNotNull>
+			<isNotNull prepend="," property="protype">
+				protype = #protype# 
+			</isNotNull>
+			<isNotNull prepend="," property="devicetype">
+				devicetype = #devicetype# 
+			</isNotNull>
+			<isNotNull prepend="," property="pollstatus">
+				pollstatus = #pollstatus# 
+			</isNotNull>
+		</dynamic>
+		<dynamic>
+			<isNotEmpty property="pollployid"> 
+				 WHERE pollPloyID = #pollployid#
+			</isNotEmpty>
+		</dynamic>
+	</update>
+	
+	<!-- 监控量参数 -->
+	<!-- 提供选择监控的参数列表 -->
+	<select id="queryMoncodeListForSel" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			moncodeid, 
+			protype, 
+			proname,
+			paramclass,
+			t.Name as classname,			
+			paramcode, 
+			paramname			
+		FROM 	moncode 
+		LEFT JOIN protocol USING(protype)
+		LEFT JOIN basetable t ON t.Code = paramclass AND t.Type='202'
+		where protype = #protype# and paramcode not in ($paramcodes$) 
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and paramclass = #paramclass# 
+			</isNotEmpty>
+		</dynamic>
+		Order by paramclass ASC,paramcode ASC
+	</select>
+	
+	<!-- 提供选择监控的参数列表总记录数 -->
+	<select id="queryMoncodeCountForSel" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+			count(1)
+		FROM 	moncode 
+		LEFT JOIN moncode_editor USING(moncodeid)
+		where protype = #protype# and paramcode not in ($paramcodes$) 
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and paramclass = #paramclass# 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 提供选择监控的参数列表 -->
+	<select id="queryMoncodeListForSet" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			moncodeid, 
+			protype, 
+			proname,
+			paramclass,
+			t.Name as classname,	
+			paramcode, 
+			paramname			
+		FROM 	moncode 
+		LEFT JOIN protocol USING(protype)
+		LEFT JOIN basetable t ON t.Code = paramclass AND t.Type='202'
+		where protype = #protype# and paramcode in ($paramcodes$) 
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and paramclass = #paramclass# 
+			</isNotEmpty>
+		</dynamic>
+		Order by paramclass ASC,paramcode ASC
+	</select>
+	
+	<!-- 提供选择监控的参数列表总记录数 -->
+	<select id="queryMoncodeCountForSet" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+			count(1)
+		FROM 	moncode 
+		LEFT JOIN moncode_editor USING(moncodeid)
+		where protype = #protype# and paramcode in ($paramcodes$) 
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and paramclass = #paramclass# 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="queryMoniterParamsByPollployid" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			pmid, 
+			moncodeids
+		FROM 
+			pollploy_moncode 
+		where 
+			pollployid = #pollployid#
+	</select>
+	
+	<delete id="deletePollploy_moncode" parameterClass="dto">
+		DELETE FROM pollploy_moncode where pollployid = #pollployid#
+	</delete>
+	
+	<insert id="insertMoniterParams" parameterClass="dto">
+		INSERT INTO pollploy_moncode 
+			(
+				moncodeids, 
+				pollployid
+			)
+		VALUES
+			(
+				#paramcodes#, 
+				#pollployid#
+			);
+	</insert>
+	
+	<update id="updateMoniterParams" parameterClass="dto">
+		UPDATE pollploy_moncode 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="paramcodes">
+				moncodeids = #paramcodes#
+			</isNotNull>
+		</dynamic>
+		WHERE pollployid = #pollployid#
+	</update>
+	
+	<!-- 轮询策略对应的下位机 -->
+	<select id="queryForRepeater" parameterClass="dto" resultClass="dto">
+		SELECT a.repeaterid,b.channelcode,b.StatTel,b.report,b.stationid FROM circle a,repeaterinfo b WHERE pollployid= #pollployid# AND a.repeaterid=b.RepeaterID
+	</select>
+	
+	<!-- 轮询策略对应的参数 -->
+	<select id="queryForCode" parameterClass="dto" resultClass="java.lang.String">
+		SELECT moncodeids FROM pollploy_moncode WHERE pollployid= #pollployid#
+	</select>
+	
+	<!-- 保存轮询报表 -->
+	<insert id="saveReport" parameterClass="dto">
+		INSERT INTO pollreport(pollid,repeaterid,paramcode,VALUE,TIME) VALUES(#pollid#,#repeaterid#,#paramcode#,#rval1#,#time#)
+	</insert>
+	
+	<!-- 修改轮询策略状态 -->
+	<update id="updateStatus" parameterClass="dto">
+		UPDATE pollploy SET pollstatus= #pollstatus# WHERE flag= 1
+	</update>
+	
+	<!-- 检查监控量参数 -->
+	<select id="validateMoniterParams" parameterClass="dto" resultClass="dto">
+		SELECT DISTINCT
+		  t1.paramcode,
+		  t1.paramname
+		FROM repeaterparam t
+		  RIGHT JOIN (SELECT
+		                paramcode,
+		                paramname
+		              FROM moncode
+		              WHERE ProType = #protype#
+		                  AND ParamCode IN ($paramcodes$)) t1
+		    ON t.ParamCode = t1.paramcode
+		      AND t.RepeaterID = #repeaterid#
+		 WHERE
+			t.ParamCode IS NULL  
+	</select>
+	
+	<!-- 配置轮询监控量验证 -->
+	<select id="checkPollMoncode" parameterClass="dto" resultClass="dto">
+		SELECT moncodeids FROM pollploy_moncode 
+		WHERE
+			pollployid = #pollployid#
+	</select>
+	
+	<!-- 统计轮询站点数量验证 -->
+	<select id="checkPollStationNum" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT count(1) FROM circle 
+		WHERE
+			pollployid = #pollployid#
+	</select>
+</sqlMap>

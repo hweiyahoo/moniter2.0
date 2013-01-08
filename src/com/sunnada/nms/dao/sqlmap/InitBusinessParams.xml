@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 公共下拉框 -->
+<sqlMap namespace="businessparams">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 通讯参数设置 -->
+	<select id="queryCommInfo" parameterClass="dto" resultClass="dto">
+			SELECT 	
+				comport, 
+				baudrate, 
+				parity, 
+				stopbits, 
+				flowcontrolin, 
+				flowcontrolout,
+				databits, 
+				objectid
+			FROM 
+				comminfo 
+			WHERE comport IS NOT NULL AND baudrate IS NOT NULL
+	</select>
+	
+	<update id="updateBusinessDataForRepeaterinfo" parameterClass="dto">
+		UPDATE repeaterinfo set connectflag = '0',report='',channelcode=13,flag='0'
+	</update>
+	
+	<update id="updateBusinessDataForSharflag" parameterClass="dto">
+		UPDATE shareflag set flag = '0'
+	</update>
+</sqlMap>

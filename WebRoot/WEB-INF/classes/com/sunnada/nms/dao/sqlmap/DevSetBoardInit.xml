@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 监控板初始化 -->
+<sqlMap namespace="devSetBoardInit">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 查找checkprotype和repeaterId -->
+	<select id="checkProtypeDtoAndRePId" parameterClass="dto" resultClass="dto">
+		SELECT 
+			repeaterid,
+			protype 
+		FROM 
+			repeaterinfo 
+		WHERE 
+			stationid=#stationid# AND statsubid=#statsubid#
+	</select>
+	
+	<!-- paramCode -->
+	<select id="queryMonCodeForParamCode" parameterClass="dto" resultClass="java.lang.String">
+	     select 
+	     		paramcode 
+	     FROM 
+	     		moncode
+	     WHERE  
+	     		protype=#protype# AND reflag=#code# 
+	</select>
+	
+	<!-- 更新站点编号，设备编号和tel -->
+	<update id="updateItem" parameterClass="dto">
+	</update>
+	
+	
+</sqlMap>

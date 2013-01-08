@@ -1,0 +1,286 @@
+.textfield1 {
+    FONT-FAMILY: "宋体", "Arial", "sans-serif";
+	font-size: 12px;
+	border: 1px none #FFFFFF;
+	background-color: #FFFFFF;
+}
+.inputfield1 {
+	BORDER-RIGHT: #999999 0px solid; 
+	BORDER-TOP: #999999 0px solid; 
+	FONT-SIZE: 12px; 
+	BORDER-LEFT: #999999 0px solid; 
+	BORDER-BOTTOM: #999999 1px solid;
+}
+.inputfield2{
+	background-color: #D6DBDE;
+	font-size: 12px;
+	border: 1px solid #394963;
+}
+.input {
+	background-color: #D5DBE3;
+}
+
+.inputtxt{
+	BORDER-RIGHT: #999999 0px solid; 
+	BORDER-TOP: #999999 0px solid; 
+	FONT-SIZE: 12px; 
+	BORDER-LEFT: #999999 0px solid; 
+	BORDER-BOTTOM: #999999 1px solid;
+}
+
+HR{
+	border: 1px dashed #CCCCCC;
+}
+
+.title {
+    FONT-FAMILY: "宋体", "Arial", "sans-serif";
+	font-size: 16px;
+	font-weight: bold;
+	text-align: center;
+}
+.subtitle{
+    FONT-FAMILY: "宋体", "Arial", "sans-serif";
+	font-size: 14px;
+	font-weight: bold;
+	text-align: left;   
+}
+
+.allform {
+	border: thin none #394963;
+	color: #394963;
+}
+.fixtitle {
+    FONT-FAMILY: "宋体", "Arial", "sans-serif";
+	font-size: 12px;
+	font-weight: normal;
+	color: white;
+	/*background-color: #308dbb;*/
+	background-color: #BECEF2;
+	text-align: center;
+	background-image: url( "<%=contextPath%>/images/tableTopbg.gif" );
+
+}
+.normal {
+    FONT-FAMILY: "宋体", "Arial", "sans-serif";
+	font-size: 12px;
+	color: #000000;
+}
+.fixtitle2 {
+	FONT-FAMILY: "宋体", "Arial", "sans-serif";
+	font-size: 12px;
+	font-weight: normal;
+	color: #696969;
+	background-color: #e8e8e8;
+	text-align: right;
+	text-indent: 10px;
+	white-space: pre;
+}
+
+
+TH{ 
+	FONT-FAMILY: "宋体", "Arial", "sans-serif"; 
+	FONT-SIZE: 12px; 
+	font-weight: normal;
+	color: #000000;
+	text-align: center;
+	background-color: #BECEF2; 
+}
+
+TD{ 
+	FONT-FAMILY: "宋体", "Arial", "sans-serif"; 
+	FONT-SIZE: 12px; 
+	font-weight: normal;
+	color: #000000;
+	text-align: center;
+} 
+
+.tabtitle {
+	FONT-FAMILY: "宋体", "Arial", "sans-serif";
+	font-size: 12px;
+	font-weight: bold;
+	color: blue;
+	text-align: center;
+	text-indent: 10px;
+	white-space: pre;
+}
+.flatbut {
+	background-color: #D6DBDE;
+	border: 1px solid #394963;
+	cursor: hand;
+}
+.coolscrollbar {
+	SCROLLBAR-FACE-COLOR: #FFFFFF; 
+	SCROLLBAR-HIGHLIGHT-COLOR: #eeeeee; 
+	SCROLLBAR-SHADOW-COLOR: #eeeeee; 
+	SCROLLBAR-ARROW-COLOR: #7FA5E7; 
+	SCROLLBAR-BASE-COLOR: #24262c; 
+	scrollbar-dark-shadow-color: #cccccc; 
+	scrollbar-3d-light-color: #eeeeee
+}
+.myshadow {
+	color: #333333;
+	filter: DropShadow(Color=#ffffff, OffX=1, OffY=1);
+	font-size: 12px;
+	vertical-align: bottom;
+	height: 16px;
+}
+.divcontent{
+	  height:150px;
+	  width:100%;
+	  overflow-y: auto;
+      SCROLLBAR-HIGHLIGHT-COLOR:   #FFFFFF;   /*滚动条及箭头的亮边色*/   
+      SCROLLBAR-SHADOW-COLOR:   #E1E1E1;         /*滚动条及箭头的暗边色*/   
+      SCROLLBAR-3DLIGHT-COLOR:   #E1E1E1;       /*滚动条及箭头的3D亮边色*/   
+      SCROLLBAR-TRACK-COLOR:   #E1EDFD;           /*滚动条底色*/   
+      SCROLLBAR-DARKSHADOW-COLOR:#FFFFFF;   /*滚动条及箭头的暗边阴影色*/   
+      SCROLLBAR-BASE-COLOR:   #9BBBF4;             /*滚动条的基本颜色*/   
+      SCROLLBAR-ARROW-COLOR:   #35507A;           /*箭头的颜色*/   
+      SCROLLBAR-FACE-COLOR:   #9BBBF4;             /*滚动条及箭头的颜色*/   
+}
+.btn {
+		 height:20px;
+		 width:60;
+		 BORDER-RIGHT: #7b9ebd 1px solid; 
+		 PADDING-RIGHT: 2px; 
+		 BORDER-TOP: #7b9ebd 1px solid; 
+		 PADDING-LEFT: 2px; 
+		 FONT-SIZE: 12px; 
+		 FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#cecfde); 
+		 BORDER-LEFT: #7b9ebd 1px solid; 
+		 CURSOR: hand; COLOR: black; 
+		 PADDING-TOP: 2px; 
+		 BORDER-BOTTOM: #7b9ebd 1px solid;
+}
+.btn100 {
+		 height:20px;
+		 width:100;
+		 BORDER-RIGHT: #7b9ebd 1px solid; 
+		 PADDING-RIGHT: 2px; 
+		 BORDER-TOP: #7b9ebd 1px solid; 
+		 PADDING-LEFT: 2px; 
+		 FONT-SIZE: 12px; 
+		 FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#cecfde); 
+		 BORDER-LEFT: #7b9ebd 1px solid; 
+		 CURSOR: hand; COLOR: black; 
+		 PADDING-TOP: 2px; 
+		 BORDER-BOTTOM: #7b9ebd 1px solid;
+}
+.btn1_mouseout {
+		height:20px;
+		width:60;
+		BORDER-RIGHT: #7EBF4F 1px solid; 
+		PADDING-RIGHT: 2px; 
+		BORDER-TOP: #7EBF4F 1px solid; 
+		PADDING-LEFT: 2px; 
+		FONT-SIZE: 12px; 
+		FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#B3D997); 
+		BORDER-LEFT: #7EBF4F 1px solid; 
+		CURSOR: hand; 
+		COLOR: black; 
+		PADDING-TOP: 2px; 
+		BORDER-BOTTOM: #7EBF4F 1px solid;
+} 
+.btn1_mouseover {
+		height:20px;
+		width:60;
+		BORDER-RIGHT: #7EBF4F 1px solid; 
+		PADDING-RIGHT: 2px; 
+		BORDER-TOP: #7EBF4F 1px solid; 
+		PADDING-LEFT: 2px; 
+		FONT-SIZE: 12px; 
+		FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#CAE4B6); 
+		BORDER-LEFT: #7EBF4F 1px solid; 
+		CURSOR: hand; 
+		COLOR: black; 
+		PADDING-TOP: 2px; 
+		BORDER-BOTTOM: #7EBF4F 1px solid;
+} 
+.btn2 {
+		padding: 2 4 0 4;
+		font-size:12px;
+		height:20px;
+		width:60;
+		background-color:#ece9d8;
+		border-width:1;
+}
+.btn3_mouseout {
+			height:20px;
+			width:60;
+			BORDER-RIGHT: #2C59AA 1px solid; 
+			PADDING-RIGHT: 2px; 
+			BORDER-TOP: #2C59AA 1px solid; 
+			PADDING-LEFT: 2px; 
+			FONT-SIZE: 12px; 
+			FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#C3DAF5); 
+			BORDER-LEFT: #2C59AA 1px solid; 
+			CURSOR: hand; 
+			COLOR: black; 
+			PADDING-TOP: 2px; 
+			BORDER-BOTTOM: #2C59AA 1px solid;
+} 
+.btn3_mouseover {
+			height:20px;
+			width:60;
+            BORDER-RIGHT: #2C59AA 1px solid; 
+			PADDING-RIGHT: 2px; 
+			BORDER-TOP: #2C59AA 1px solid; 
+			PADDING-LEFT: 2px; 
+			FONT-SIZE: 12px; 
+			FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#D7E7FA); 
+			BORDER-LEFT: #2C59AA 1px solid; 
+			CURSOR: hand; 
+			COLOR: black; 
+			PADDING-TOP: 2px; 
+            BORDER-BOTTOM: #2C59AA 1px solid;
+}
+.btn3_mousedown{
+			 height:20px;
+			width:60;
+            BORDER-RIGHT: #FFE400 1px solid; 
+			PADDING-RIGHT: 2px; 
+			BORDER-TOP: #FFE400 1px solid; 
+			PADDING-LEFT: 2px; 
+			FONT-SIZE: 12px; 
+			FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#C3DAF5); 
+			BORDER-LEFT: #FFE400 1px solid; 
+			CURSOR: hand; 
+			COLOR: black; 
+			PADDING-TOP: 2px; 
+            BORDER-BOTTOM: #FFE400 1px solid;
+} 
+.btn3_mouseup {
+			height:20px;
+			 width:60;
+			BORDER-RIGHT: #2C59AA 1px solid; 
+			PADDING-RIGHT: 2px; 
+			BORDER-TOP: #2C59AA 1px solid; 
+			PADDING-LEFT: 2px; FONT-SIZE: 12px; 
+			FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#ffffff, EndColorStr=#C3DAF5); 
+			BORDER-LEFT: #2C59AA 1px solid; 
+			CURSOR: hand; 
+			COLOR: black; 
+			PADDING-TOP: 2px; 
+			BORDER-BOTTOM: #2C59AA 1px solid;
+} 
+.btn_2k3 {
+			height:20px;
+			width:60;
+            BORDER-RIGHT: #002D96 1px solid; 
+			PADDING-RIGHT: 2px; 
+			BORDER-TOP: #002D96 1px solid; 
+			PADDING-LEFT: 2px; 
+			FONT-SIZE: 12px; 
+			FILTER: progid:DXImageTransform.Microsoft.Gradient(GradientType=0, StartColorStr=#FFFFFF, EndColorStr=#9DBCEA); 
+			BORDER-LEFT: #002D96 1px solid; 
+			CURSOR: hand; 
+			COLOR: black; 
+			PADDING-TOP: 2px; 
+            BORDER-BOTTOM: #002D96 1px solid;
+}
+.interior				{ background-color:#FFFFFF}
+.interiortable			{ background-color:#EFEFEF}
+.CBClass				{border:0px;}
+.listcontent 			{font-family:"tahoma";font-weight: normal;font-size: 70%;color: #000000;height:18px;}
+.listcontentright 		{font-family:"tahoma";font-weight: normal;font-size: 70%;color: #646464;height:18px;background-color:#F5F5F5}
+.listcontentend			{font-family:"tahoma";font-weight: normal;font-size: 70%;color: #000000;height:18px;}
+.listcontent2 			{font-family:"tahoma";font-weight: normal;font-size: 70%;color: #000000;height:15px;}

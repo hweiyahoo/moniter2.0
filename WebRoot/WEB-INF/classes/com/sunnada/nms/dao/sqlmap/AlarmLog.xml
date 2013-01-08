@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 告警日志 -->
+<sqlMap namespace="alarmLog">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 列表 -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  a.alarmid,
+		  a.repeaterid,
+		  c.stationname,
+		  a.detail,
+		  a.aitemnum,
+		  a.alarmtype,
+		  g.name	AS alarmtypename, 
+		  b.protype,
+		  d.proname      AS protypename,
+		  b.devicetype,
+		  b.hardname     AS devicename,
+		  c.Province,
+		  f.sitename     AS provincename,
+		  c.city,
+		  e.sitename     AS cityname,
+		  a.alarmtime,
+		  a.recovertime,
+		  CASE WHEN a.flag IS NULL THEN '1' ELSE a.flag	END AS flag
+		FROM alarmlog a
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="repeaterid">
+				and c.repeaterid = #repeaterid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="flag">
+				and a.flag = #flag#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and alarmtype = #alarmtype#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY flag ASC,alarmtype DESC ,stationname
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+		    count(1)
+		FROM 	alarmlog a 
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1= 1
+		<dynamic>
+			<isNotEmpty property="protype">
+				and c.repeaterid = #repeaterid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and c.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="flag">
+				and a.flag = #flag#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and alarmtype = #alarmtype#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 更新 -->
+	<update id="updateFlag" parameterClass="dto">
+		UPDATE 
+			alarmlog
+		Set 
+			flag = 2,
+			modifyuser = #modifyuser#,
+			modifytime = #modifytime#
+		WHERE 
+			alarmid = #alarmid# 
+	</update>
+	
+	<!-- 删除 -->
+	<delete id="deleteItem" parameterClass="dto">
+	
+	</delete>
+	
+	<!-- 添加 -->
+	<insert id="insertItem" parameterClass="dto">
+	</insert>
+	
+	
+	<!-- 根据登录用户所属地区，查看未处理告警个数 -->
+	<select id="statsUnDoAlarmForUserSite" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT COUNT(1) AS stats 
+		FROM alarmlog 
+		WHERE Province=#province# AND City=#city# AND (flag='1' or flag is null) 
+		<dynamic>
+			<isNotEmpty property="alarmtype">
+				and alarmtype = #alarmtype#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

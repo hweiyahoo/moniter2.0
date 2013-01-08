@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 业务系统 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	
+	<!-- 命令策略 -->
+	<bean id="cmdPraseService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.CmdPraseServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<!-- 公共功能 -->
+	<bean id="comboxService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ComboxServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 轮询设置 -->
+	<bean id="repeaterPollCfgService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.RepeaterPollCfgServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 编辑控件管理 -->
+	<bean id="editorMngService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.EditorMngServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 站点位子管理 -->
+	<bean id="mapService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.MapServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 便签管理 -->
+	<bean id="memoService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.MemoServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 协议解析相关操作 -->
+	<bean id="reptInfoService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ReptInfoServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="cmdHeadInfoService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.CmdHeadInfoServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="reptParamInfoService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ReptParamInfoServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 设备类型 -->
+	<bean id="deviceTypeService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.DeviceTypeServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+<!-- 基站管理 -->
+	<bean id="baseStatMgrService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.BaseStatMgrServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+<!-- 代维人员管理 -->
+	<bean id="maintainManService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.MaintainManServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+<!-- 监控标识号管理 -->
+	<bean id="baseMonCodeService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.BaseMonCodeServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+<!-- 命令头信息维护 -->
+	<bean id="cmdTitleService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.CmdTitleServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+<!-- 应答标识维护 -->
+	<bean id="respFlagService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.RespFlagServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+<!-- 通讯参数配置 -->
+	<bean id="comConfigService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ComConfigServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 命令策略 -->
+	<bean id="deviceMagService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.DeviceMagServieceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 解析命令 -->
+	<bean id="updateService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.UpdateServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 告警屏蔽 -->
+	<bean id="shieldService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ShieldServiceImpl">
+				<property name="g4Dao" ref="g4Dao"/>
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 监视通讯数据 -->
+	<bean id="ComDataService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ComDataServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	
+	<bean id="UpdatedevicefileService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.UpdatedevicefileServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 厂家管理 -->
+	<bean id="factoryInfoService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.FactoryInfoServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 协议类型 -->
+	<bean id="proTypeService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ProTypeServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 地区编码 -->
+	<bean id="siteService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.SiteServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 告警统计 -->
+	<bean id="alarmStatisticsService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.AlarmStatisticsServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 告警日志 -->
+	<bean id="alarmLogService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.AlarmLogServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 直放站统计 -->
+	<bean id="repeaterStatisticsService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.RepeaterStatisticsServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 轮询报表 -->
+	<bean id="repeaterCheckService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.RepeaterCheckServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 告警情况 -->
+	<bean id="alarmStateService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.AlarmStateServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 监控板初始化 -->
+	<bean id="devSetBoardInitService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.DevSetBoardInitServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 连接站点 -->
+	<bean id="btnConnectClickService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.BtnConnectClickServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 公告管理 -->
+	<bean id="noticeService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.NoticeServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+	
+	<!-- 用戶标记管理 -->
+	<bean id="receiveService" parent="baseTransactionProxyG4">
+		<property name="target">
+			<bean class="com.sunnada.nms.dao.impl.ReceiveServiceImpl">
+				<property name="g4Dao" ref="g4Dao" />
+			</bean>
+		</property>
+	</bean>
+</beans>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 直放站统计 -->
+<sqlMap namespace="repeaterStatistics">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 列表 -->
+	<select id="checkItem" parameterClass="dto" resultClass="dto">
+	</select>
+	
+	<!-- 列表 -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  	  a.stationname,
+		  	  b.protype,
+		  	  d.proname      AS protypename,
+		  	  b.devicetype,
+		 	  b.hardname     AS devicename,
+			  a.stationid,
+			  a.statsubid,
+			  a.setdate,
+			  a.site,
+			  a.Province,
+			  f.sitename     AS provincename,
+			  a.city,
+			  e.sitename     AS cityname,
+			  a.stattel,
+			  a.ip,
+			  a.basestatcode,
+			  a.note
+		FROM repeaterinfo a
+		  LEFT JOIN devicetype b ON a.protype = b.protype AND b.DeviceType = a.DeviceType
+		  LEFT JOIN protocol d ON d.protype = a.protype 
+		  LEFT JOIN site e ON a.City = e.SiteCode AND a.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON a.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and a.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and a.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and a.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="site">
+				and a.site = #site#
+			</isNotEmpty>
+			<isNotEmpty property="beginsetdate">
+			<![CDATA[ and cast(a.setdate as date) >= cast(#beginsetdate# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endsetdate">
+			<![CDATA[ and cast(a.setdate as date) <= cast(#endsetdate# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+		    count(1)
+		FROM repeaterinfo a
+		  LEFT JOIN devicetype b ON a.protype = b.protype AND b.DeviceType = a.DeviceType
+		  LEFT JOIN protocol d ON d.protype = a.protype
+		  LEFT JOIN site e ON a.City = e.SiteCode AND a.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON a.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and a.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and a.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and a.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="site">
+				and a.site = #site#
+			</isNotEmpty>
+			<isNotEmpty property="beginsetdate">
+			<![CDATA[ and cast(a.setdate as date) >= cast(#beginsetdate# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endsetdate">
+			<![CDATA[ and cast(a.setdate as date) <= cast(#endsetdate# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 按设备类型分类 -->
+	<select id="queryDeviceReportList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  	  a.stationname,
+		  	  b.protype,
+		  	  d.proname,
+		  	  b.devicetype,
+		 	  b.hardname     AS name,
+			  a.stationid,
+			  a.statsubid,
+			  a.province,
+			  a.city,
+			  count(1) as visits
+		FROM repeaterinfo a
+		  LEFT JOIN devicetype b ON a.protype = b.protype AND b.DeviceType = a.DeviceType
+		  LEFT JOIN protocol d ON d.protype = a.protype 
+		  LEFT JOIN site e ON a.City = e.SiteCode AND a.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON a.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		WHERE 1 = 1 and b.protype = #protype#
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and a.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and a.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and a.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="site">
+				and a.site = #site#
+			</isNotEmpty>
+			<isNotEmpty property="beginsetdate">
+			<![CDATA[ and cast(a.setdate as date) >= cast(#beginsetdate# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endsetdate">
+			<![CDATA[ and cast(a.setdate as date) <= cast(#endsetdate# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+		group by b.devicetype
+	</select>
+	
+	<!-- 按协议类型分类 -->
+	<select id="queryStatisticsReportList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  	  a.stationname,
+		  	  b.protype,
+		  	  d.proname      AS name,
+		  	  b.devicetype,
+		 	  b.hardname     AS devicename,
+			  a.stationid,
+			  a.statsubid,
+			  a.province,
+			  a.city,
+			  count(1) as visits
+		FROM repeaterinfo a
+		  LEFT JOIN devicetype b ON a.protype = b.protype AND b.DeviceType = a.DeviceType
+		  LEFT JOIN protocol d ON d.protype = a.protype 
+		  LEFT JOIN site e ON a.City = e.SiteCode AND a.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON a.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		WHERE 1 = 1 
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and a.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and a.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and a.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="site">
+				and a.site = #site#
+			</isNotEmpty>
+			<isNotEmpty property="beginsetdate">
+			<![CDATA[ and cast(a.setdate as date) >= cast(#beginsetdate# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endsetdate">
+			<![CDATA[ and cast(a.setdate as date) <= cast(#endsetdate# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+		group by b.protype
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="deleteItem" parameterClass="dto">
+	
+	</delete>
+	
+	<!-- 添加 -->
+	<insert id="insertItem" parameterClass="dto">
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="updateItem" parameterClass="dto">
+	</update>
+	
+</sqlMap>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<struts-config>
+	<!-- 配置ActionFormBean -->
+	<form-beans>
+		<!-- 公共Form -->
+		<form-bean name="commonActionForm" type="org.eredlab.g4.rif.web.CommonActionForm" />
+	</form-beans>
+
+	<!-- Action映射 -->
+	<action-mappings type="org.apache.struts.action.ActionMapping">
+		<!--监视通讯数据 ,exe菜单名就设备参数所以这边取为devparam--><!--设备监控导出excel-->
+		<action name="commonActionForm" path="/comdata" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.devparam.web.DevComDataAction">
+			<forward name="ComDataInit" path="/nms/devparam/DevComDataMain.jsp" />
+		</action>  		
+        <!--远程升级 -->
+		<action name="commonActionForm" path="/updatedevicefile" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.devparam.web.UpdatedevicefileAction">
+			<forward name="updatedevicefileInit" path="/nms/devparam/updatedevicefileMain.jsp" />
+		</action>
+		
+
+	</action-mappings>
+</struts-config>

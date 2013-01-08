@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 告警屏蔽 -->
+<sqlMap namespace="shield">
+	<typeAlias alias="dto"
+		type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+		
+	<!-- 查询所有告警 -->
+	<select id="queryAllShield" parameterClass="dto" resultClass="dto">
+		SELECT
+		  a.MonCodeID id,
+		  b.ProName protype,
+		  paramcode,
+		  paramname,
+		  c.name alarmtype,
+		  detail,
+		  shield
+		FROM moncode a
+		  LEFT JOIN protocol b
+		    ON a.ProType = b.ProType
+		  LEFT JOIN basetable c
+		    ON c.Type = 201
+		      AND a.AlarmType = c.code
+		WHERE paramclass = 03
+		<isNotEmpty property="protype">
+			and a.protype=#protype#
+		</isNotEmpty>
+		<isNotEmpty property="paramcode">
+			and a.paramcode like '%$paramcode$%'
+		</isNotEmpty>
+		<isNotEmpty property="paramname">
+			and a.paramname like '%$paramname$%'
+		</isNotEmpty>
+		<isNotEmpty property="shield">
+			and a.shield=#shield#
+		</isNotEmpty>
+		<isNotEmpty property="alarmtype">
+			and a.alarmtype=#alarmtype#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 告警总数 -->
+	<select id="countShield" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT
+		  count(1)
+		FROM moncode a
+		  LEFT JOIN protocol b
+		    ON a.ProType = b.ProType
+		  LEFT JOIN basetable c
+		    ON c.Type = 201
+		      AND a.AlarmType = c.code
+		WHERE paramclass = 03
+		<isNotEmpty property="protype">
+			and a.protype=#protype#
+		</isNotEmpty>
+		<isNotEmpty property="paramcode">
+			and a.paramcode like '%$paramcode$%'
+		</isNotEmpty>
+		<isNotEmpty property="paramname">
+			and a.paramname like '%$paramname$%'
+		</isNotEmpty>
+		<isNotEmpty property="shield">
+			and a.shield=#shield#
+		</isNotEmpty>
+		<isNotEmpty property="alarmtype">
+			and a.alarmtype=#alarmtype#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 屏蔽告警 -->
+	<update id="shield" parameterClass="dto">
+		UPDATE moncode SET shield=#flag# WHERE moncodeid IN ($checked$)
+	</update>
+</sqlMap>

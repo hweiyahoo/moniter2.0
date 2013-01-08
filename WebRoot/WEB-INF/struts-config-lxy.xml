@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<struts-config>
+	<!-- 配置ActionFormBean -->
+	<form-beans>
+		<!-- 公共Form -->
+		<form-bean name="commonActionForm" type="org.eredlab.g4.rif.web.CommonActionForm" />
+	</form-beans>
+
+	<!-- Action映射 -->
+	<action-mappings type="org.apache.struts.action.ActionMapping">
+		<!-- 主页面-->
+		<action name="commonActionForm" path="/main" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+			<forward name="mainView" path="/nms/repeaterManager/deviceMag.jsp" /> 
+		</action>  
+		<!-- 站点tree -->
+		<action name="commonActionForm" path="/repeaterTree" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>  
+		<!-- 获取站点status信息 -->
+		<action name="commonActionForm" path="/repeaterStatus" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 获取站点parameter信息 -->
+		<action name="commonActionForm" path="/repeaterParameter" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 根据协议类型取设备 -->
+		<action name="commonActionForm" path="/deviceStore" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 获取节点编号，电话信息 -->
+		<action name="commonActionForm" path="/repeaterInformation" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 获取节点全部信息 -->
+		<action name="commonActionForm" path="/repeaterInforamtion1" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 保存节点信息 -->
+		<action name="commonActionForm" path="/saveRepeaterInfo" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 获取省市主机数 -->
+		<action name="commonActionForm" path="/repeaterCount" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 新增下位机 -->
+		<action name="commonActionForm" path="/saveRepeater" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMagAction">
+		</action>
+		<!-- 告警屏蔽 -->
+		<action name="commonActionForm" path="/shield" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.ShieldAction">
+			<forward name="shieldView" path="/nms/base/shield.jsp"/>
+		</action>
+	</action-mappings>
+</struts-config>

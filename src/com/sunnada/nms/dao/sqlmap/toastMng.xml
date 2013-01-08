@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 命令策略 -->
+<sqlMap namespace="toastmng">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 列表 -->
+	<select id="queryHttpSession" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			sessionid, 
+			username, 
+			account, 
+			createtime, 
+			loginip, 
+			userid, 
+			explorer	 
+		FROM 
+			eahttpsession 
+	</select>
+	
+</sqlMap>

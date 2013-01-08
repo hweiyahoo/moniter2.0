@@ -1,0 +1,467 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 轮询设置 -->
+<sqlMap namespace="devicemnt">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- Province  -->
+	<select id="queryItemsForProvince" parameterClass="dto" resultClass="dto">
+		 	SELECT 
+		 		DISTINCT CONCAT_WS('_','province',t1.SiteCode) AS id,t1.SiteName as text
+			FROM repeaterinfo t
+  						LEFT JOIN site t1 ON t.Province = t1.SiteCode AND t1.ParentSite = '00' and t1.type=1
+  			WHERE  t.parentrepid = '0' and t1.sitename IS NOT NULL
+		<dynamic>
+			<isNotEmpty property="user_province"> 
+					and t.province = #user_province#  
+			</isNotEmpty>
+		</dynamic>
+  			ORDER BY t.Province
+	</select>
+	
+	<!--  City -->
+	<select id="queryItemsForCity" parameterClass="dto" resultClass="dto">
+		 	SELECT 
+		 		DISTINCT CONCAT_WS('_','city',t.Province,t2.SiteCode) AS id,t2.SiteName  as text
+			FROM repeaterinfo t
+  						LEFT JOIN site t2 ON t.City = t2.SiteCode AND t.Province = t2.ParentSite and t2.type=1
+  			WHERE t.Province = #province#
+		<dynamic>
+			<isNotEmpty property="user_city"> 
+					and t.city = #user_city#  
+			</isNotEmpty>
+		</dynamic>
+  			ORDER BY t.Province,t.City
+	</select>
+	
+	<!--  检查站点是否拥有未归类站点：即开站上报的省份地市不在site表中 -->
+	<select id="checkNoClassStation" parameterClass="dto" resultClass="java.lang.Integer">
+		 	SELECT
+			  COUNT(1)
+			FROM repeaterinfo t
+			  LEFT JOIN site t3 ON t3.sitecode = t.Province AND ParentSite = '00' AND t3.type=1
+			  LEFT JOIN site t4 ON t4.sitecode = t.City AND t4.ParentSite = t.Province AND t4.type=1
+			WHERE 1=1 AND (t3.sitename IS NULL OR t4.sitename IS NULL)
+	</select>
+	
+	<!-- 加载未分类站点  -->
+	<select id="queryItemsForNoClassStation" parameterClass="dto" resultClass="dto">
+		 	SELECT 
+		 		DISTINCT CONCAT_WS('_','notclass|station',t.StationID,t.statsubid,CAST(t.RepeaterID AS CHAR),t.Province,t.City) AS id,t.StationName  as text,
+		 		statsubid,
+		 		parentrepid,
+		 		repeaterid,
+		 		CASE 			
+				WHEN report IS NOT NULL AND report !='' AND ChannelCode='13' THEN 'success_connIcon'
+				WHEN ChannelCode = '01' THEN 'comm_connIcon' 	
+				WHEN ChannelCode = '03' THEN 'nmsmodemIcon' 		
+				ELSE 'fail_connIcon'			
+				END AS 'iconCls'
+			FROM repeaterinfo t
+				LEFT JOIN site t3 ON t3.sitecode = t.Province AND ParentSite = '00' AND t3.type=1
+			WHERE t.parentrepid = '0' AND t3.sitename IS NULL
+  			ORDER BY t.Province,t.City
+	</select>
+	
+	<!-- Station  -->
+	<select id="queryItemsForStation" parameterClass="dto" resultClass="dto">
+		 	SELECT 
+		 		DISTINCT CONCAT_WS('_','station',t.StationID,t.statsubid,CAST(t.RepeaterID AS CHAR),t.Province,t.City) AS id,t.StationName  as text,
+		 		statsubid,
+		 		parentrepid,
+		 		repeaterid,
+		 		CASE 			
+				WHEN report IS NOT NULL AND report !='' AND ChannelCode='13' THEN 'success_connIcon'
+				WHEN ChannelCode = '01' THEN 'comm_connIcon' 	
+				WHEN ChannelCode = '03' THEN 'nmsmodemIcon' 		
+				ELSE 'fail_connIcon'			
+				END AS 'iconCls'
+			FROM repeaterinfo t
+			WHERE t.parentrepid = '0' AND t.City = #city# AND t.Province = #province#
+  			ORDER BY t.Province,t.City
+	</select>
+	
+	<!-- SubStation  -->
+	<select id="queryItemsForSubStation" parameterClass="dto" resultClass="dto">
+		 	SELECT 
+		 		DISTINCT CONCAT_WS('_','substation',t.StationID,t.statsubid,CAST(t.RepeaterID AS CHAR)) AS id,t.StationName  as text,'false' as leaf,
+		 		statsubid,
+		 		parentrepid,
+		 		repeaterid,
+		 		CASE 			
+				WHEN report IS NOT NULL AND report !='' AND ChannelCode='13' THEN 'success_connIcon'
+				WHEN ChannelCode = '01' THEN 'comm_connIcon' 		
+				WHEN ChannelCode = '03' THEN 'nmsmodemIcon' 	
+				ELSE 'fail_connIcon'			
+				END AS 'iconCls'
+			FROM repeaterinfo t
+			WHERE t.parentrepid = #parentrepid# and t.parentrepid != '0'
+  			ORDER BY t.Province,t.City,t.StationName
+	</select>
+	
+	<!-- 直放站站点列表 -->
+	<select id="queryItemsForStationList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  t.repeaterid,
+		  t.protype,
+		  t1.proname,
+		  t.devicetype,
+		  t2.hardname,
+		  t.stationid,
+		  t.stationname,
+		  t.statsubid,
+		  t.province,
+		  t3.sitename   AS provincename,
+		  t.city,
+		  t4.sitename   AS cityname,
+		  t.channelname,
+		  t.channelcode,
+		  (SELECT
+		     t5.AlarmType
+		   FROM alarmlog t5
+		     LEFT JOIN repeaterinfo b
+		       ON b.RepeaterID = t5.RepeaterID
+		     LEFT JOIN moncode a
+		       ON t5.ParamCode = a.ParamCode AND a.ProType = b.ProType
+		   WHERE t5.RepeaterID = t.RepeaterID
+		       AND t5.flag = 1
+		       AND a.shield = 0       
+		   ORDER BY AlarmType DESC
+		   LIMIT 0,1) AS 'alarmtype'
+		FROM repeaterinfo t
+		  LEFT JOIN protocol t1 ON t.ProType = t1.ProType
+		  LEFT JOIN devicetype t2 ON t2.DeviceType = t.DeviceType AND t2.ProType = t1.ProType
+		  LEFT JOIN site t3 ON t3.sitecode = t.Province AND ParentSite = '00' and t3.type=1
+		  LEFT JOIN site t4 ON t4.sitecode = t.City AND t4.ParentSite = t.Province and t4.type=1
+		WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="stationid"> 
+				and t.stationid = #stationid#  
+			</isNotEmpty>
+			<isNotEmpty property="statsubid">
+				<!-- 
+					and t.statsubid not in('00','FF')
+					-->
+				and t.statsubid = #statsubid#  
+			</isNotEmpty>
+			<isNotEmpty property="repeaterid"> 
+				and t.repeaterid = #repeaterid#  
+			</isNotEmpty>
+			<isNotEmpty property="parentrepid"> 
+				or t.parentrepid = #parentrepid#
+			</isNotEmpty>
+			<isNotEmpty property="province"> 
+				and t.province = #province#  
+			</isNotEmpty>
+			<isNotEmpty property="city"> 
+				and t.city = #city#  
+			</isNotEmpty>
+			<isNotEmpty property="protype"> 
+				and t.protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="stationname">
+				and t.stationname like '%$stationname$%'
+			</isNotEmpty>
+			<isNotEmpty property="devicetype"> 
+				and t.devicetype = #devicetype#  
+			</isNotEmpty>
+			<isNotEmpty property="user_province"> 
+				and t.province = #user_province#  
+			</isNotEmpty>
+			<isNotEmpty property="user_city"> 
+				and t.city = #user_city#  
+			</isNotEmpty>
+			<isNotEmpty property="notclass"> 
+				and (t3.sitename IS NULL OR t4.sitename IS NULL)
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY t.province,t.city,t.stationid,t.statsubid
+	</select>
+	
+	<!-- 直放站站点总记录数 -->
+	<select id="queryCountForStationList" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+			count(1)
+		FROM    repeaterinfo t
+			LEFT JOIN site t3 ON t3.sitecode = t.Province AND ParentSite = '00' and t3.type=1
+		  	LEFT JOIN site t4 ON t4.sitecode = t.City AND t4.ParentSite = t.Province and t4.type=1
+		where 1=1 
+		<dynamic>
+			<isNotEmpty property="stationid"> 
+				and t.stationid = #stationid#  
+			</isNotEmpty>
+			<isNotEmpty property="statsubid"> 
+				and t.statsubid NOT IN('00','FF')
+			</isNotEmpty>
+			<isNotEmpty property="repeaterid"> 
+				and t.repeaterid = #repeaterid#  
+			</isNotEmpty>
+			<isNotEmpty property="parentrepid"> 
+				or t.parentrepid = #parentrepid#
+			</isNotEmpty>
+			<isNotEmpty property="province"> 
+				and t.province = #province#  
+			</isNotEmpty>
+			<isNotEmpty property="city"> 
+				and t.city = #city#  
+			</isNotEmpty>
+			<isNotEmpty property="protype"> 
+				and t.protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="stationname">
+				and t.stationname like '%$stationname$%'
+			</isNotEmpty>
+			<isNotEmpty property="devicetype"> 
+				and t.devicetype = #devicetype#  
+			</isNotEmpty>
+			<isNotEmpty property="user_province"> 
+				and t.province = #user_province#  
+			</isNotEmpty>
+			<isNotEmpty property="user_city"> 
+				and t.city = #user_city#  
+			</isNotEmpty>
+			<isNotEmpty property="notclass"> 
+				and (t3.sitename IS NULL OR t4.sitename IS NULL)
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 加载直放站监控参数 -->
+	<select id="queryItemsForParam" parameterClass="dto" resultClass="dto">
+		SELECT 
+			t.recid, 
+			t.repeaterid, 
+			t.paramclass, 
+			t.paramcode, 
+			t.paramname, 
+			CASE 			
+			WHEN t2.ParamCode IS NULL THEN '' 					
+			ELSE t2.ParamCode			
+			END AS 'paramcode_able', 
+			CASE 			
+			WHEN t2.ParamName IS NULL THEN '' 					
+			ELSE t2.ParamName			
+			END AS 'paramname_able', 
+			CASE 			
+			WHEN t4.recid IS NULL THEN '' 					
+			ELSE CAST(t4.recid AS CHAR)	
+			END AS 'recid_able', 
+			CASE 			
+			WHEN t4.val1 IS NULL THEN '' 					
+			ELSE t4.val1			
+			END AS 'val1_able', 
+			CASE 			
+			WHEN t4.rval1 IS NULL THEN '' 					
+			ELSE t4.rval1			
+			END AS 'rval1_able', 
+			CASE 			
+			WHEN t4.datatype IS NULL THEN '' 					
+			ELSE t4.datatype			
+			END AS 'datatype', 
+			t.datalen, 
+			t.dataunit, 
+			t.alarmtype, 
+			t.reflag, 
+			t.sarithmetic, 
+			t.rarithmetic, 
+			t.htod, 
+			t.needw, 
+			CASE 			
+			WHEN t.val1 IS NULL THEN '' 					
+			ELSE t.val1 			
+			END AS 'val1', 
+			CASE 			
+			WHEN t.rval1 IS NULL THEN '' 					
+			ELSE t.rval1 			
+			END AS 'rval1', 
+			CASE 			
+			WHEN t.uptime IS NULL THEN '' 					
+			ELSE t.uptime 			
+			END AS 'uptime',  
+			t.alarmtime, 
+			t.resettime, 
+			t.alarmnote, 
+			t.reflagtype,
+			CASE
+			WHEN editormodel IS NULL THEN '0'
+			WHEN editormodel = '' THEN '0'
+			ELSE editormodel
+			END AS 'editormodel',
+			editorcode, 
+			editorname, 
+			CASE
+			WHEN editortype IS NULL THEN '0'
+			WHEN editortype = '' THEN '0'
+			ELSE editortype
+			END AS 'editortype',
+			editorcontent, 
+			CASE
+			WHEN editorvalidation IS NULL THEN ''
+			ELSE editorvalidation
+			END AS 'editorvalidation',
+			editortip, 
+			editorstyle, 
+			editorclass, 
+			editortitle,
+			CASE
+			WHEN editordisabled IS NULL THEN '0'
+			WHEN editordisabled = '' THEN '0'
+			ELSE editordisabled
+			END AS 'editordisabled'
+		FROM repeaterparam t
+		LEFT JOIN moncode t1 ON t.ParamClass = t1.ParamClass AND t.ParamCode=t1.ParamCode
+		LEFT JOIN moncode t2 ON t.ParamClass='03' AND t2.ParamClass='02' AND t2.protype=#protype# AND RIGHT(t.ParamCode,2)=RIGHT(t2.ParamCode,2)
+		LEFT JOIN repeaterparam t4 ON t4.ParamClass=t2.ParamClass AND t4.ParamCode=t2.ParamCode AND t.repeaterid = t4.repeaterid
+		LEFT JOIN moncode_editor t3 ON t1.moncodeid = t3.moncodeid
+		LEFT JOIN editor USING(editorid)
+		WHERE t1.protype=#protype# AND t.repeaterid=#repeaterid# 
+		<dynamic>
+			<isNotNull property="paramclass">
+				and t.paramclass IN ($paramclass$)
+			</isNotNull>
+		</dynamic>
+		order by t1.protype,t.paramclass,t.paramcode
+	</select>
+	
+	<update id="updateParam" parameterClass="dto">
+		UPDATE repeaterparam 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="val1">
+				val1 = #val1#
+			</isNotNull>
+			<isNotNull prepend="," property="uptime">
+				uptime = #uptime#
+			</isNotNull>
+		</dynamic>
+		WHERE recid = #recid#
+	</update>
+	
+	<select id="queryItemsForMoncode" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			moncodeid, 
+			protype, 
+			paramclass, 
+			paramcode, 
+			paramname, 
+			datatype, 
+			datalen, 
+			dataunit, 
+			alarmtype, 
+			reflag, 
+			sarithmetic, 
+			rarithmetic, 
+			htod, 
+			needw, 
+			detail, 
+			reflagtype,
+			editorcode, 
+			editorname, 
+			editortype, 
+			editormodel, 
+			editorcontent, 
+			editorvalidation, 
+			editortip, 
+			editorstyle, 
+			editorclass, 
+			editortitle,
+			editordisabled
+		FROM 	moncode 
+		LEFT JOIN moncode_editor USING(moncodeid)
+		LEFT JOIN editor USING(editorid)
+		WHERE protype='60' AND paramclass='01'
+	</select>
+
+	<!-- 直放站站点信息 -->
+	<select id="getReptInfo" parameterClass="dto" resultClass="dto">
+      SELECT
+        t.repeaterid,
+        t.protype,
+        t.devicetype,
+        t.stationid,
+        t.stationname,
+        t.statsubid,
+        t.province,  
+        t.city, 
+        t.channelname,
+        t.channelcode
+        from repeaterinfo t
+        WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="stationid"> 
+            and t.stationid = #stationid#  
+			</isNotEmpty>
+			<isNotEmpty property="statsubid">
+            and t.statsubid = #statsubid#  
+			</isNotEmpty>
+			<isNotEmpty property="repeaterid"> 
+            and t.repeaterid = #repeaterid#  
+			</isNotEmpty>
+			<isNotEmpty property="parentrepid"> 
+            or t.parentrepid = #parentrepid#
+			</isNotEmpty>
+			<isNotEmpty property="province"> 
+            and t.province = #province#  
+			</isNotEmpty>
+			<isNotEmpty property="city"> 
+            and t.city = #city#  
+			</isNotEmpty>
+			<isNotEmpty property="protype"> 
+            and t.protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="stationname">
+            and t.stationname like '%$stationname$%'
+			</isNotEmpty>
+			<isNotEmpty property="devicetype"> 
+            and t.devicetype = #devicetype#  
+			</isNotEmpty>
+		</dynamic>
+      ORDER BY t.province,t.city,t.stationid,t.statsubid
+	</select>
+	
+	<!-- 直接执行sql进行查询 -->
+	<select id="excuteSQL" parameterClass="dto" resultClass="dto">
+		<dynamic>
+			<isNotEmpty property="sql"> 
+				$sql$
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	<select id="queryItemsForParamByStationId" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			RecId, 
+			RepeaterID, 
+			ParamClass, 
+			ParamCode, 
+			ParamName, 
+			DataType, 
+			DataLen, 
+			DataUnit, 
+			AlarmType, 
+			ReFlag, 
+			SArithmetic, 
+			RArithmetic, 
+			HtoD, 
+			NeedW, 
+			Val1, 
+			RVal1, 
+			UpTime, 
+			AlarmTime, 
+			ResetTime, 
+			AlarmNote, 
+			reflagtype
+		FROM 
+			repeaterparam 
+		where 1=1 
+		<dynamic>
+			<isNotNull property="repeaterid">
+				and t.repeaterid=#repeaterid# 
+			</isNotNull>
+			<isNotNull property="paramclass">
+				and t.paramclass=#paramclass# 
+			</isNotNull>
+		</dynamic>
+	</select>
+
+</sqlMap>

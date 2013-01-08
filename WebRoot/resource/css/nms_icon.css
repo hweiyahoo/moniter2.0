@@ -1,0 +1,216 @@
+@CHARSET "UTF-8";
+
+.comm_connIcon {
+	background-image: url(../image/nms/comm_conn.png) !important;
+}
+
+.success_connIcon {
+	background-image: url(../image/nms/success_conn.png) !important;
+}
+
+.fail_connIcon {
+	background-image: url(../image/nms/fail_conn.png) !important;
+}
+
+.nmsmodemIcon {
+	background-image: url(../image/nms/nmsmodem.png) !important;
+}
+
+.messageIcon {
+	background-image: url(../image/nms/message.png) !important;
+}
+
+.newmessageIcon {
+	background-image: url(../image/nms/newmessage.gif) !important;
+}
+
+.page_editIcon {
+	background-image: url(../image/nms/page_edit1.png) !important;
+}
+
+.page_cleanIcon {
+	background-image: url(../image/nms/page_clean.png) !important;
+}
+
+.page_settingIcon {
+	background-image: url(../image/nms/page_setting.png) !important;
+}
+
+.nmsconfigIcon {
+	background-image: url(../image/nms/nmsconfig.png) !important;
+}
+
+.nmsmanagerIcon {
+	background-image: url(../image/nms/nmsmanager.png) !important;
+}
+
+.nmstoolsIcon {
+	background-image: url(../image/nms/nmstools.png) !important;
+}
+
+.personalaffairsIcon {
+	background-image: url(../image/nms/personalaffairs.png) !important;
+}
+
+.receMsgIcon {
+	background-image: url(../image/nms/receMsg.png) !important;
+}
+
+.sendMsgIcon {
+	background-image: url(../image/nms/sendMsg.png) !important;
+}
+
+.nmsfactoryIcon {
+	background-image: url(../image/nms/nmsfactory.png) !important;
+}
+
+.nmsprototypeIcon {
+	background-image: url(../image/nms/nmsprototype.png) !important;
+}
+
+.nmssiteIcon {
+	background-image: url(../image/nms/nmssite.png) !important;
+}
+
+.nmsstationIcon {
+	background-image: url(../image/nms/nmsstation.png) !important;
+}
+
+.nmseditorIcon {
+	background-image: url(../image/nms/nmseditor.png) !important;
+}
+
+.nmscmd2Icon {
+	background-image: url(../image/nms/nmscmd2.png) !important;
+}
+
+.nmscmdIcon {
+	background-image: url(../image/nms/nmscmd.png) !important;
+}
+
+.nmsclassIcon {
+	background-image: url(../image/nms/nmsclass.png) !important;
+}
+
+.nmsalarmstatusIcon {
+	background-image: url(../image/nms/nmsalarmstatus.png) !important;
+}
+
+.nmsflagIcon {
+	background-image: url(../image/nms/nmsflag.png) !important;
+}
+
+.nmslogIcon {
+	background-image: url(../image/nms/nmslog.png) !important;
+}
+
+.nmsmonitorIcon {
+	background-image: url(../image/nms/nmsmonitor.png) !important;
+}
+
+.nmsmonitordataIcon {
+	background-image: url(../image/nms/nmsmonitordata.png) !important;
+}
+
+.nmspollIcon {
+	background-image: url(../image/nms/nmspoll.png) !important;
+}
+
+.nmsreport2Icon {
+	background-image: url(../image/nms/nmsreport2.png) !important;
+}
+
+.nmsreport1Icon {
+	background-image: url(../image/nms/nmsreport1.png) !important;
+}
+
+.nmsstation2Icon {
+	background-image: url(../image/nms/nmsstation2.png) !important;
+}
+
+.nmstypeIcon {
+	background-image: url(../image/nms/nmstype.png) !important;
+}
+
+.nmsstrategyIcon {
+	background-image: url(../image/nms/nmsstrategy.png) !important;
+}
+
+.nmsmapIcon {
+	background-image: url(../image/nms/nmsmap.png) !important;
+}
+
+.nmsfilterIcon {
+	background-image: url(../image/nms/nmsfilter.png) !important;
+}
+
+.nmsrailwayIcon {
+	background-image: url(../image/nms/nmsrailway.png) !important;
+}
+
+.nmsnotclassIcon {
+	background-image: url(../image/nms/nmsnotclass.png) !important;
+}
+
+.nmslightOnIcon {
+	background-image: url(../image/nms/lightOn.gif);
+	background-repeat: no-repeat;
+	background-position: 0 40%;
+	padding: 0 5px 0 18px;
+	display: block;
+	float: left;
+}
+
+.nmswelcomeIcon {
+	background-image: url(../image/nms/welcome.png);
+	background-repeat: no-repeat;
+	background-position: 0 40%;
+	padding: 0 5px 0 18px;
+	display: block;
+	float: left;
+}
+
+.nmsErrorIcon {
+	background-image: url(../image/ext/exclamation.png);
+	background-repeat: no-repeat;
+	background-position: 0 40%;
+	padding: 0 5px 0 18px;
+	display: block;
+	float: left;
+}
+
+.nmsAlarmIcon {
+	background-image: url(../image/nms/alarm.png);
+	background-repeat: no-repeat;
+	background-position: 0 40%;
+	padding: 0 5px 0 18px;
+	display: block;
+	float: left;
+}
+
+.nmsDebugIcon {
+	background-image: url(../image/ext/bug.png);
+	background-repeat: no-repeat;
+	background-position: 0 40%;
+	padding: 0 5px 0 18px;
+	display: block;
+	float: left;
+}
+
+.nmsInfoIcon {
+	background-image: url(../image/nms/info.png);
+	background-repeat: no-repeat;
+	background-position: 0 40%;
+	padding: 0 5px 0 18px;
+	display: block;
+	float: left;
+}
+
+.nmsHeartIcon {
+	background-image: url(../image/nms/heart.png);
+	background-repeat: no-repeat;
+	background-position: 0 40%;
+	padding: 0 5px 0 18px;
+	display: block;
+	float: left;
+}

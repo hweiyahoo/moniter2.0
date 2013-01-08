@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 公共下拉框 -->
+<sqlMap namespace="nmscombox">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 协议类型 -->
+	<select id="queryProtocol" parameterClass="dto" resultClass="dto">
+		SELECT protype AS 'value', proname AS 'text' FROM protocol WHERE protype != 'null'
+	</select>
+	
+	<!-- 设备类型 -->
+	<select id="queryDevicetype" parameterClass="dto" resultClass="dto">
+		SELECT devicetype AS 'value', hardname AS 'text' FROM devicetype WHERE 1=1 and devicetype != 'null'
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and protype = #protype# 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 地区 -->
+	<select id="querySite" parameterClass="dto" resultClass="dto">
+		SELECT sitecode AS 'value', sitename AS 'text' FROM site WHERE 1=1 and sitecode != 'null'
+		<dynamic>
+			<isNotEmpty property="parentsite"> 
+				and parentsite = #parentsite# 
+			</isNotEmpty>
+			<isNotEmpty property="flag"> 
+				and flag = #flag# 
+			</isNotEmpty>
+			<isNotEmpty property="type"> 
+				and type = #type# 
+			</isNotEmpty>
+			<isNotEmpty property="sitecode"> 
+				and sitecode = #sitecode#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 数据字典表 -->
+	<select id="queryBasetable" parameterClass="dto" resultClass="dto">
+		SELECT CODE AS 'value', NAME AS 'text' FROM basetable WHERE 1=1 and CODE != 'null'
+		<dynamic>
+			<isNotEmpty property="type"> 
+				and TYPE = #type# 
+			</isNotEmpty>
+			<isNotEmpty property="name"> 
+				and NAME = #name# 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="queryBasetable2" parameterClass="dto" resultClass="dto">
+		SELECT CODE AS 'value', CODE AS 'text' FROM basetable WHERE 1=1 and CODE != 'null'
+		<dynamic>
+			<isNotEmpty property="type"> 
+				and TYPE = #type# 
+			</isNotEmpty>
+			<isNotEmpty property="name"> 
+				and NAME = #name# 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- BaseStat -->
+	<select id="queryBaseStat" parameterClass="dto" resultClass="dto">
+		SELECT BaseStatCode AS 'value', BaseStatName AS 'text' FROM basestat WHERE 1=1 AND BaseStatCode != 'null'
+	</select>
+	
+	<!-- devicebase -->
+	<select id="queryDevicebase" parameterClass="dto" resultClass="dto">
+		SELECT ParamCode AS 'value', ParamName AS 'text' FROM devicebase WHERE 1=1 AND ParamCode != 'null'
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and ParamClass = #paramclass# 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- noticetype -->
+	<select id="queryNoticetype" parameterClass="dto" resultClass="dto">
+		SELECT type_id AS 'value', type_name AS 'text' FROM notice_type where locked='0'
+	</select>
+	
+	<!-- noticemodel -->
+	<select id="queryNoticemodel" parameterClass="dto" resultClass="dto">
+		SELECT model_id AS 'value', model_name AS 'text' FROM notice_model where locked='0'
+	</select>
+	
+	<!-- 用户部门列表 -->
+	<select id="querydeptuser" parameterClass="dto" resultClass="dto">
+		SELECT 
+			userid AS 'value',
+			CONCAT(username,'[',deptname,']') AS 'text' 
+		FROM eauser t 
+			LEFT JOIN eadept t1 ON t.DEPTID=t1.DEPTID 
+		ORDER BY t.DEPTID
+	</select>
+	
+	<!-- 角色部门列表 -->
+	<select id="querydeptrole" parameterClass="dto" resultClass="dto">
+		SELECT 
+			roleid AS 'value',
+			CONCAT(ROLENAME,'[',deptname,']') AS 'text' 
+		FROM earole t 
+			LEFT JOIN eadept t1 ON t.DEPTID=t1.DEPTID 
+		ORDER BY t.DEPTID
+	</select>
+	
+	<!-- 直接执行sql进行查询 -->
+	<select id="excuteSQL" parameterClass="dto" resultClass="dto">
+		<dynamic>
+			<isNotEmpty property="sql"> 
+				$sql$
+			</isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

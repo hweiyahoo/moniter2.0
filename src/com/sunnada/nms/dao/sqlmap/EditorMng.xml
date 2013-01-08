@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 编辑控件管理 -->
+<sqlMap namespace="editormng">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 直接执行sql进行查询 -->
+	<select id="queryEditorType" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			editorid, 
+			editorcode AS 'id', 
+			editorname AS 'text', 
+			editorname,
+			editortype, 
+			editormodel,
+			editordisabled,
+			note
+		FROM editor 
+		WHERE LENGTH(editorcode)=2
+		ORDER BY editortype,editorname
+	</select>
+	
+	<!-- 直接执行sql进行查询 -->
+	<select id="queryEditor" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			editorid, 
+			editorcode as 'id', 
+			CONCAT('[',editorcode,']',editorname) AS 'text', 
+			editorname,
+			editortype, 
+			editormodel,
+			editordisabled,
+			note
+		FROM editor 
+		WHERE LENGTH(editorcode)>2
+			and editorcode like '$node$%'
+		ORDER BY editortype,editorname
+	</select>
+	
+	<!-- 编辑控件值列表 -->
+	<select id="queryEditorDataForList" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			editorid, 
+			editorcode, 
+			editorname, 
+			editortype, 
+			editormodel, 
+			editorcontent, 
+			editorvalidation, 
+			editortip, 
+			editorstyle, 
+			editorclass, 
+			editortitle, 
+			editordisabled,
+			note
+		FROM editor 
+		WHERE 1=1 and LENGTH(editorcode)>2
+		<dynamic>
+			<isNotEmpty property="editorcode"> 
+				and editorcode like '$editorcode$%'  
+			</isNotEmpty>
+		</dynamic>
+		order by editortype,editorname
+	</select>
+	
+	<!-- 编辑-参数映射列表 -->
+	<select id="queryMappingForList" parameterClass="dto" resultClass="dto">
+		SELECT 
+			meid,
+			t.moncodeid,
+			t.editorid,
+			protype, 
+			paramclass, 
+			paramcode, 
+			paramname, 
+			datatype, 
+			datalen, 
+			dataunit, 
+			alarmtype, 
+			reflag, 
+			sarithmetic, 
+			rarithmetic, 
+			htod, 
+			needw, 
+			detail, 
+			reflagtype,
+			editorcode, 
+			editorname, 
+			editortype, 
+			editormodel
+		FROM moncode_editor t
+				LEFT JOIN moncode t1 ON t.moncodeid = t1.moncodeid
+				LEFT JOIN editor t2 ON t.editorid = t2.editorid
+		WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and protype = #protype#  
+			</isNotEmpty>
+			<isNotEmpty property="editorcode"> 
+				and editorcode = #editorcode#  
+			</isNotEmpty>
+		</dynamic>
+		Order by protype ASC,paramcode ASC
+	</select>
+	
+	<!-- 编辑-参数映射总记录数 -->
+	<select id="queryMappingForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 
+			count(1)
+		FROM moncode_editor t
+				LEFT JOIN moncode t1 ON t.moncodeid = t1.moncodeid
+				LEFT JOIN editor t2 ON t.editorid = t2.editorid
+		WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and protype = #protype# 
+			</isNotEmpty>
+			<isNotEmpty property="editorcode"> 
+				and editorcode = #editorcode#  
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 提供选择监控的参数列表 -->
+	<select id="queryMoncodeListForSel" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			moncodeid, 
+			editorid,
+			protype, 
+			paramclass, 
+			t.name,
+			paramcode, 
+			paramname, 
+			datatype, 
+			datalen, 
+			dataunit, 
+			alarmtype, 
+			reflag, 
+			sarithmetic, 
+			rarithmetic, 
+			htod, 
+			needw, 
+			detail, 
+			reflagtype
+		FROM 	moncode 
+		LEFT JOIN moncode_editor USING(moncodeid)
+		LEFT JOIN basetable t ON t.Code = paramclass AND t.Type='202'
+		where editorid is null and protype = #protype# 
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and paramclass = #paramclass# 
+			</isNotEmpty>
+			<isNotEmpty property="paramname">
+				and ( paramname  like '%$paramname$%' or paramcode  like '%$paramname$%') 
+			</isNotEmpty>
+		</dynamic>
+		Order by protype ASC,paramcode ASC
+	</select>
+	
+	<!-- 提供选择监控的参数列表总记录数 -->
+	<select id="queryMoncodeCountForSel" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+			count(1)
+		FROM 	moncode 
+		LEFT JOIN moncode_editor USING(moncodeid)
+		where editorid is null and protype = #protype# 
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and paramclass = #paramclass# 
+			</isNotEmpty>
+			<isNotEmpty property="paramname">
+				and ( paramname  like '%$paramname$%' or paramcode  like '%$paramname$%') 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 添加映射表 -->
+	<insert id="insertMapping" parameterClass="dto">
+		INSERT INTO moncode_editor 
+			( 
+				editorid, 
+				moncodeid
+			)
+		VALUES
+			( 
+				#editorid#, 
+				#moncodeid#
+			)
+	</insert>
+	
+	<!-- 添加验证 -->
+	<select id="checkEditorAdd" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT count(1) FROM editor where editorname = #editorname# 
+	</select>
+	
+	<select id="checkEditorEdit" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT count(1) FROM editor 
+		where editorname = #editorname# and editorcode != #editorcode#
+	</select>
+	
+	<!-- 添加编辑控件 -->
+	<insert id="insertEditor" parameterClass="dto" >
+    	INSERT INTO editor 
+		<dynamic prepend="(" >
+			<isNotNull prepend="," property="editorcode" >
+		        editorcode
+			</isNotNull>
+			<isNotNull prepend="," property="editorname" >
+		        editorname
+			</isNotNull>
+			<isNotNull prepend="," property="editortype" >
+		        editortype
+			</isNotNull>
+			<isNotNull prepend="," property="editormodel" >
+		        editormodel
+			</isNotNull>
+			<isNotNull prepend="," property="editorvalidation" >
+		        editorvalidation
+			</isNotNull>
+			<isNotNull prepend="," property="editorcontent" >
+		        editorcontent
+			</isNotNull>
+			<isNotNull prepend="," property="editortip">
+				editortip
+			</isNotNull>
+			<isNotNull prepend="," property="editorstyle">
+				editorstyle
+			</isNotNull>
+			<isNotNull prepend="," property="editorclass">
+				editorclass
+			</isNotNull>
+			<isNotNull prepend="," property="editortitle">
+				editortitle
+			</isNotNull>
+			<isNotNull prepend="," property="note">
+				note
+			</isNotNull>
+			<isNotNull prepend="," property="editordisabled">
+				editordisabled
+			</isNotNull>
+		      )
+		</dynamic>
+		VALUES
+		<dynamic prepend="(" >
+			<isNotNull prepend="," property="editorcode" >
+		        #editorcode#
+			</isNotNull>
+			<isNotNull prepend="," property="editorname" >
+		        #editorname#
+			</isNotNull>
+			<isNotNull prepend="," property="editortype" >
+		        #editortype#
+			</isNotNull>
+			<isNotNull prepend="," property="editormodel" >
+		        #editormodel#
+			</isNotNull>
+			<isNotNull prepend="," property="editorvalidation" >
+		        #editorvalidation#
+			</isNotNull>
+			<isNotNull prepend="," property="editorcontent" >
+		        #editorcontent#
+			</isNotNull>
+			<isNotNull prepend="," property="editortip">
+				#editortip#
+			</isNotNull>
+			<isNotNull prepend="," property="editorstyle">
+				#editorstyle#
+			</isNotNull>
+			<isNotNull prepend="," property="editorclass">
+				#editorclass#
+			</isNotNull>
+			<isNotNull prepend="," property="editortitle">
+				#editortitle#
+			</isNotNull>
+			<isNotNull prepend="," property="note">
+				#note#
+			</isNotNull>
+			<isNotNull prepend="," property="editordisabled">
+				#editordisabled#
+			</isNotNull>
+		      )
+		</dynamic>
+	</insert>
+  	
+	<!-- 修改编辑控件 -->
+	<update id="updateEditor" parameterClass="dto">
+		UPDATE editor
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="editorname">
+				editorname = #editorname#
+			</isNotNull>
+			<isNotNull prepend="," property="editortype">
+				editortype = #editortype#
+			</isNotNull>
+			<isNotNull prepend="," property="editormodel">
+				editormodel = #editormodel#
+			</isNotNull>
+			<isNotNull prepend="," property="editorcontent">
+				editorcontent = #editorcontent#
+			</isNotNull>
+			<isNotNull prepend="," property="editorvalidation">
+				editorvalidation = #editorvalidation#
+			</isNotNull>
+			<isNotNull prepend="," property="editortip">
+				editortip = #editortip#
+			</isNotNull>
+			<isNotNull prepend="," property="editorstyle">
+				editorstyle = #editorstyle#
+			</isNotNull>
+			<isNotNull prepend="," property="editorclass">
+				editorclass = #editorclass#
+			</isNotNull>
+			<isNotNull prepend="," property="editortitle">
+				editortitle = #editortitle#
+			</isNotNull>
+			<isNotNull prepend="," property="note">
+				note = #note#
+			</isNotNull>
+			<isNotNull prepend="," property="editordisabled">
+				editordisabled = #editordisabled#
+			</isNotNull>
+		</dynamic>
+		WHERE editorcode = #editorcode#
+	</update>
+	
+	<select id="querySubEditorMaxCode" parameterClass="dto" resultClass="dto">
+		SELECT MAX(editorcode) as code FROM editor WHERE LENGTH(editorcode)=2
+	</select>
+	
+	<select id="queryEditorMaxCode" parameterClass="dto" resultClass="dto">
+		SELECT MAX(editorcode) as code FROM editor WHERE LENGTH(editorcode)>2 AND editorcode LIKE '$subcode$%'
+	</select>
+	
+	<delete id="deleteEditor" parameterClass="dto">
+		DELETE FROM editor where editorcode LIKE '$editorcode$%'
+	</delete>
+	
+	<delete id="deleteMapping" parameterClass="dto">
+		DELETE FROM moncode_editor WHERE editorid IN (SELECT editorid FROM editor WHERE editorcode LIKE '$editorcode$%')
+	</delete>
+	
+	<delete id="deleteMappingByID" parameterClass="dto">
+		DELETE FROM moncode_editor WHERE meid = #meid#
+	</delete>
+	
+</sqlMap>

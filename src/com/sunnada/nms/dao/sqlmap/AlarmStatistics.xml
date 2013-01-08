@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 告警统计 -->
+<sqlMap namespace="alarmStatistics">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 列表 -->
+	<select id="checkItem" parameterClass="dto" resultClass="dto">
+	</select>
+	
+	<!-- 列表 -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  a.alarmtime,
+		  c.stationname,
+		  a.detail,
+		  a.alarmtype,
+		  g.name	AS alarmtypename, 
+		  a.aitemnum,
+		  c.protype,
+		  d.proname      AS protypename,
+		  c.devicetype,
+		  b.hardname     AS devicename,
+		  c.stationid,
+		  c.statsubid,
+		  c.setdate,
+		  c.site,
+		  c.Province,
+		  f.sitename     AS provincename,
+		  c.city,
+		  e.sitename     AS cityname,
+		  c.stattel,
+		  c.ip,
+		  c.basestatcode,
+		  c.note
+		FROM alarmlog a
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and c.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and c.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 	
+		    count(1)
+		FROM 	alarmlog a 
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1= 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and c.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and c.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	<!-- 统计列表 -->
+	<select id="queryStatisticsForList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  c.stationname,
+		  a.detail,
+		  a.alarmtype,
+		  g.name	AS alarmtypename, 
+		  sum(a.aitemnum) as aitemnum,
+		  b.protype,
+		  d.proname      AS protypename,
+		  b.devicetype,
+		  b.hardname     AS devicename,
+		  c.stationid,
+		  c.statsubid,
+		  c.setdate,
+		  c.site,
+		  c.province,
+		  f.sitename     AS provincename,
+		  c.city,
+		  e.sitename     AS cityname,
+		  c.stattel,
+		  c.ip,
+		  c.basestatcode,
+		  c.note
+		FROM alarmlog a
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+		group by c.stationid
+	</select>
+	
+	
+	<!-- 统计列表记录数 -->
+	<select id="queryStatisticsCountList" parameterClass="dto" resultClass="java.lang.Integer">
+	SELECT 
+	  COUNT(1) FROM (
+		SELECT
+		  COUNT(1)
+		FROM alarmlog a
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+		GROUP BY c.StationID ) h
+	</select>
+	
+	
+	<!-- 查询FlashReport数据  -->
+	<select id="queryStatisticsReportList" parameterClass="map" resultClass="dto">
+		SELECT
+		  c.repeaterid,
+		  c.statsubid,
+		  c.stationname,
+		  sum(a.aitemnum) as visits,
+		  c.stationid as name,
+		  c.province,
+		  c.city,
+		  a.paramcode
+		FROM alarmlog a
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+		group by c.stationid
+	</select>
+	
+	<!-- 查询当前repeaterid 下的paramcode的报表数据 -->
+	<select id="queryParamCodeReportList" parameterClass="map" resultClass="dto">
+		   SELECT 
+			    a.repeaterid,
+			    c.statsubid,
+			    c.stationname,
+			    SUM(a.AItemNum) AS visits,
+			    c.stationid,
+			    c.province,
+		  		c.city,
+				a.paramcode,
+				h.ParamName AS NAME
+			FROM 
+				alarmlog a
+		    LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		    LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		    LEFT JOIN protocol d ON d.protype = c.protype
+		    LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		    LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		    LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		    LEFT JOIN repeaterparam  h ON a.repeaterid = h.repeaterid AND a.paramcode = h.ParamCode
+			WHERE 
+				1 = 1 AND a.repeaterid = #repeaterid#
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+		GROUP BY a.paramcode
+	</select>
+	
+	<!-- 分组列表 -->
+	<select id="statistFor2DChartDataSet" parameterClass="dto" resultClass="dto">
+		SELECT
+		  COUNT(1)      AS VALUE,
+		  a.alarmtype,
+		  g.name        AS NAME,
+		  a.repeaterid
+		FROM alarmlog a
+		  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+		  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+		  LEFT JOIN protocol d ON d.protype = c.protype
+		  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+		  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+		  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and b.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and b.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+			GROUP BY c.repeaterid,a.alarmtype,g.name
+			ORDER BY c.repeaterid,a.alarmtype
+	</select>
+	
+	<!-- 分组名称 -->
+	<select id="statistFor2DChartCateList" parameterClass="dto" resultClass="dto">
+			SELECT
+			  c.stationname        AS NAME,
+			  a.repeaterid
+			FROM alarmlog a
+			  LEFT JOIN repeaterinfo c ON a.repeaterid = c.repeaterid
+			  LEFT JOIN devicetype b ON c.protype = b.protype AND b.DeviceType = c.DeviceType
+			  LEFT JOIN protocol d ON d.protype = c.protype
+			  LEFT JOIN site e ON c.City = e.SiteCode AND c.Province = e.ParentSite and e.type=1
+			  LEFT JOIN site f ON c.Province = f.SiteCode AND f.ParentSite='00' and f.type=1
+			  LEFT JOIN basetable g ON g.type='201' AND g.code = a.alarmtype
+			WHERE 1 = 1 
+		<dynamic>
+			<isNotEmpty property="stationid">
+				and c.stationid = #stationid#
+			</isNotEmpty>
+			<isNotEmpty property="protype">
+				and c.protype = #protype#
+			</isNotEmpty>
+			<isNotEmpty property="devicetype">
+				and c.devicetype = #devicetype#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				and c.province = #province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				and c.city = #city#
+			</isNotEmpty>
+			<isNotEmpty property="alarmtype">
+				and a.alarmtype = #alarmtype#
+			</isNotEmpty>
+			<isNotEmpty property="beginalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) >= cast(#beginalarmtime# as date) ]]>
+			</isNotEmpty>
+			<isNotEmpty property="endalarmtime">
+			<![CDATA[ and cast(a.alarmtime as date) <= cast(#endalarmtime# as date) ]]>
+			</isNotEmpty>
+		</dynamic>
+			GROUP BY c.repeaterid,c.stationname
+			ORDER BY c.repeaterid
+	</select>
+	
+</sqlMap>

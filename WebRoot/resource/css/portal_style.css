@@ -1,0 +1,311 @@
+@CHARSET "UTF-8";
+
+body {
+	height: 88%;
+	font: 12px Verdana, Arial, Helvetica, sans-serif;
+}
+
+h1,h2,h3,h4,h5,ul,li,form,p {
+	margin: 0;
+	padding: 0;
+}
+
+ul {
+	list-style: none;
+}
+
+img {
+	border: 0
+}
+
+#CompanyInfo,#depInfo,#personalInfo {
+	width: 160px
+}
+
+h2 {
+	font: bold 12px/ 25px tahoma;
+	color: #0783df;
+	text-indent: 1em;
+	border-bottom: 1px solid #8dc5f0;
+}
+
+h2 img {
+	margin: 0 5px;
+	vertical-align: middle
+}
+
+.BlueBox {
+	width: 99%;
+	height: 99%;
+}
+
+.LightBlue {
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+}
+
+ul.SpacingList {
+	height: 100%;
+	padding: 0.5em 0;
+	border-top: 1px solid #fff;
+}
+
+ul.SpacingList li {
+	font: 12px/ 20px "宋体";
+	letter-spacing: 0.5em;
+	padding-left: 18px;
+	background: url(img/side_item_ico1.gif) no-repeat 7px 7px;
+}
+
+ul.SpacingList li a {
+	text-decoration: none;
+	color: #06b;
+}
+
+ul.SpacingList li a:hover {
+	text-decoration: underline;
+}
+
+ul.NormalList {
+	height: 100%;
+	padding: 0.5em 0;
+	border-top: 1px solid #fff;
+}
+
+ul.NormalList li {
+	font: 12px/ 20px "宋体";
+	padding-left: 18px;
+	background: url(img/side_item_ico1.gif) no-repeat 7px 7px;
+}
+
+ul.NormalList li a {
+	text-decoration: none;
+	color: #06b;
+}
+
+ul.NormalList li a:hover {
+	text-decoration: underline;
+}
+
+TABLE.PortletTable {
+	
+}
+
+TABLE.PortletTable TD {
+	line-height: 16px;
+}
+
+TABLE.PortletTable TD.Line {
+	line-height: 5px;
+	background: url(img/menuline.gif) no-repeat right center;
+	height: 5px;
+}
+
+table.PortletTable a.button img {
+	position: relative;
+	top: 3px;
+}
+
+TABLE.PortletTable SPAN.linksummary {
+	font-size: 14px;
+}
+
+table.PortletTable {
+	background-color: white;
+	border-width: 0px;
+	border-style: none;
+}
+
+table.PortletTable td {
+	font-family: "宋体";
+	font-size: 12px;
+	font-style: normal;
+	/*color: #003399;
+	background-color: white;*/
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+table.PortletTable td.label {
+	font-family: "宋体";
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.Tools {
+	margin: 0px;
+	text-transform: capitalize;
+	font-family: Arial, Tahoma, Helvetica, sans-serif;
+	font-size: 12pt;
+	font-weight: bold;
+}
+
+A:visited {
+	color: #333333;
+	/*text-decoration: none;*/
+}
+
+A:hover {
+	color: #FF0000;
+}
+
+a.button {
+	color: #003399;
+	font-family: "宋体";
+	font-size: 12px;
+	font-style: normal;
+	cursor: pointer;
+	text-decoration: none;
+	font-weight: normal;
+	/*behavior:url(/abs/skin/portlet/button.htc);*/
+}
+
+a.button:hover {
+	text-decoration: underline;
+	text-decoration: #FF0000;
+}
+
+table.PortletTable a.button img {
+	position: relative;
+	top: 3px;
+}
+
+a.button_recop {
+	color: #003399;
+	font-family: "宋体";
+	font-size: 12px;
+	font-style: normal;
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: normal;
+	padding-left: 2px;
+	padding-right: 2px;
+	/*behavior:url(/abs/skin/portlet/button.htc);*/
+}
+
+a.button_recop:hover {
+	text-decoration: underline;
+	text-decoration: #FF0000;
+}
+
+a.titleLink {
+	text-decoration: none;
+	font-size: 12px;
+	Cursor: pointer;
+	/*behavior:url(/css/blogspan.htc);*/
+	line-height: 18px;
+	padding-left: 2px;
+	position: relative;
+	bottom: 2px;
+}
+
+a.titleLink:hover {
+	text-decoration: underline;
+	color: #FF0000;
+}
+
+/*RefLink*/
+span.link {
+	color: #003399;
+	font-family: "宋体";
+	font-size: 12px;
+	font-style: normal;
+	cursor: pointer;
+	text-decoration: underline;
+	font-weight: normal;
+}
+
+TABLE.PortletTable {
+	
+}
+
+TABLE.PortletTable TD {
+	line-height: 16px;
+}
+
+TABLE.PortletTable TD.Line {
+	line-height: 5px;
+	background: url(/images/icon/menuline.gif) no-repeat right center;
+	height: 5px;
+}
+
+TABLE.PortletTable SPAN.linksummary {
+	font-size: 14px;
+}
+
+SPAN.titleLink {
+	font-size: 12px;
+	Cursor: pointer;
+	/*behavior:url(/css/blogspan.htc);*/
+	line-height: 18px;
+	padding-left: 0px;
+	position: relative;
+	bottom: 0px;
+	text-decoration: none;
+	color: #000000;
+	/*event:expression(
+		onmouseover = function()
+		{
+	       this.style.textDecoration  = 'underline';
+      	   this.style.color = '#FF0000';
+		},
+		onmouseout = function()
+		{
+			this.style.color = '#000000';
+            this.style.textDecoration  = 'none';
+		}
+	);*/
+}
+
+SPAN.titleLink:hover {
+	text-decoration: underline;
+	color: #ff0000;
+}
+
+SPAN.title_gray {
+	color: #888888;
+	font-size: 12px;
+	font-family: "宋体";
+	position: relative;
+	bottom: 2px;
+	cursor: default;
+	behavior: url("");
+}
+
+SPAN.contentLink {
+	font-size: 12px;
+	Cursor: pointer;
+	bottom: 0px;
+}
+
+.Browse_Style SPAN.title_gray SPAN {
+	cursor: default;
+	behavior: url("");
+}
+
+.Browse_Style SPAN.title_gray span.link {
+	Cursor: pointer;
+}
+
+table.PortletTable {
+	background-color: white;
+	border-width: 0px;
+	border-style: none;
+}
+
+table.PortletTable td {
+	font-family: "宋体";
+	font-size: 12px;
+	font-style: normal;
+	/*color: #003399;
+	background-color: white;*/
+	padding-top: 2px;
+	padding-bottom: 2px;
+}
+
+table.PortletTable td.label {
+	font-family: "宋体";
+	font-size: 12px;
+	font-weight: bold;
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<struts-config>
+	<!-- 配置ActionFormBean -->
+	<form-beans>
+		<!-- 公共Form -->
+		<form-bean name="commonActionForm" type="org.eredlab.g4.rif.web.CommonActionForm" />
+	</form-beans>
+
+	<!-- Action映射 -->
+	<action-mappings type="org.apache.struts.action.ActionMapping">
+		<!-- 厂家管理 -->
+		<action name="commonActionForm" path="/factoryInfo" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.base.web.FactoryInfoAction">
+			<forward name="factoryInfoInit" path="/nms/base/factoryInfo.jsp" />
+		</action>
+		
+		<!-- 协议类型 -->
+		<action name="commonActionForm" path="/proType" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.base.web.ProTypeAction">
+			<forward name="proTypeInit" path="/nms/base/proType.jsp" />
+		</action>    
+		
+		<!-- 地区编码 -->
+		<action name="commonActionForm" path="/site" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.base.web.SiteAction">
+			<forward name="siteInit" path="/nms/base/site.jsp" />
+			<forward name="railInit" path="/nms/base/rail.jsp" />
+		</action>
+		
+		<!-- 告警统计 -->
+		<action name="commonActionForm" path="/alarmStatistics" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.logmgr.web.AlarmStatisticsAction">
+			<forward name="alarmStatisticsInit" path="/nms/logmgr/alarmStatistics.jsp" />
+		</action>
+		
+		<!-- 直放站统计 -->
+		<action name="commonActionForm" path="/repeaterStatistics" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.logmgr.web.RepeaterStatisticsAction">
+			<forward name="repeaterStatisticsInit" path="/nms/logmgr/repeaterStatistics.jsp" />
+		</action>   
+		
+		<!-- 直放站统计 -->
+		<action name="commonActionForm" path="/repeaterCheck" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.RepeaterCheckAction">
+			<forward name="repeaterCheckInit" path="/nms/repeaterManager/repeaterCheck.jsp" />
+		</action>
+		
+		<!-- 告警情况 -->
+		<action name="commonActionForm" path="/alarmState" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.logmgr.web.AlarmStateAction">
+			<forward name="alarmStateInit" path="/nms/logmgr/alarmState.jsp" />
+		</action>
+		
+		<!-- 告警日志 -->
+		<action name="commonActionForm" path="/alarmLog" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.logmgr.web.AlarmLogAction">
+			<forward name="alarmLogInit" path="/nms/logmgr/alarmLog.jsp" />
+		</action>
+		
+		<!-- 监控板初始化 -->
+		<action name="commonActionForm" path="/devSetBoardInit" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.pub.web.DevSetBoardInitAction">
+			<forward name="devSetBoardInit" path="/nms/repeaterManager/deviceMag.jsp" />
+		</action>
+		
+		<!-- 连接站点 -->
+		<action name="commonActionForm" path="/btnConnectClick" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.rclick.web.BtnConnectClickAction">
+		</action>
+		
+		<!--CRC计算与字符串与ASCII之间的转换工具-->
+		<action name="commonActionForm" path="/CRCUtil" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.moniterutil.web.CRCUtilAction">
+			<forward name="CRCUtilInit" path="/nms/moniterUtil/CRCUtil.jsp" />
+		</action>
+		
+		<!-- 公告管理 -->
+		<action name="commonActionForm" path="/notice" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.personalaffairs.web.NoticeAction">
+			<forward name="noticeInit" path="/nms/personalaffairs/notice.jsp" />
+		</action>
+		
+		<!-- 用户标记管理 -->
+		<action name="commonActionForm" path="/receive" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.personalaffairs.web.ReceiveAction">
+			<forward name="receiveInit" path="/nms/personalaffairs/receive.jsp" />
+			<forward name="showNotice" path="/nms/personalaffairs/notice_show.jsp" />
+		</action>            
+	</action-mappings>
+</struts-config>

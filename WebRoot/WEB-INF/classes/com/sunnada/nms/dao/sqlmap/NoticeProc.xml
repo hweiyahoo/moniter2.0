@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- proc for login success user to load notice!!!-->
+<sqlMap>
+	<!-- 根据登录用户加载未读通告 -->
+	<parameterMap id="nms.loadNoticeProc.dto" class="java.util.Map">
+		<parameter property="v_userid" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN" /> <!-- 入参 -->
+		<parameter property="appCode" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT" /> <!-- 执行代码 -->
+		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT" /> <!-- 出错信息 -->
+	</parameterMap>
+	
+	<!-- 根据登录用户加载未读通告 -->
+	<procedure id="loadNoticeProc" parameterMap="nms.loadNoticeProc.dto">
+		{call loadNoticeProc(?,?,?)}
+	</procedure>
+	
+	<!-- 通告发布，根据在线用户加载未读通告 -->
+	<parameterMap id="nms.newNoticeForM34Proc.dto" class="java.util.Map">
+		<parameter property="appCode" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT" /> <!-- 执行代码 -->
+		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT" /> <!-- 出错信息 -->
+	</parameterMap>
+	
+	<!-- 通告发布，根据在线用户加载未读通告 -->
+	<procedure id="newNoticeForM34Proc" parameterMap="nms.newNoticeForM34Proc.dto">
+		{call newNoticeForM34Proc(?,?)}
+	</procedure>
+	
+</sqlMap>

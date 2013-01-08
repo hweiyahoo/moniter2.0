@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 公告管理 -->
+<sqlMap namespace="notice">
+	<typeAlias alias="dto"
+		type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+
+
+	<!-- 列表 -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  	a.notice_id,
+		  	a.model_id,
+		  	b.model_name,
+		  	a.type_id,
+		  	c.type_name,
+		  	a.title,
+		  	a.content,
+		  	a.unrescission,
+		  	a.rescission_time,
+		  	a.unremove,
+		  	a.remove_time,
+		  	a.priority,
+		  	a.publish_time,
+		  	a.publish_user,
+		  	a.user_type,
+		  	a.modify_time,
+		  	a.modify_user,
+		  	a.rece_obj
+		FROM notice a
+  			LEFT JOIN notice_model b ON a.model_id = b.model_id
+  			LEFT JOIN notice_type c ON a.type_id = c.type_id
+		WHERE 1 = 1
+		ORDER BY a.type_id,a.publish_time desc
+	</select>
+
+	<!-- 总记录数 -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 
+			count(1)
+		FROM notice a
+  			LEFT JOIN notice_model b ON a.model_id = b.model_id
+  			LEFT JOIN notice_type c ON a.type_id = c.type_id
+		WHERE 1 = 1
+		
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="deleteItem" parameterClass="dto">
+		DELETE FROM notice where notice_id = #notice_id# 
+	</delete>
+	
+	<!-- 增加记录 -->
+	<insert id="insertItem" parameterClass="dto">
+	<![CDATA[
+		INSERT INTO notice 
+		(
+			notice_id,
+			  model_id,		  
+			  type_id,
+			  title,
+			  content,
+			  publish_time,
+			  publish_user,
+			  rece_obj
+		)
+		VALUES
+		(
+			$notice_id$,
+			$model_id$, 
+			$type_id$, 
+			#title#, 
+			#content#, 
+			#create_time#,
+			#create_user#,
+			#rece_obj#
+		)
+	]]>
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="updateItem" parameterClass="dto">
+		UPDATE notice
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="model_id">
+				model_id = #model_id#
+			</isNotNull>
+			<isNotNull prepend="," property="type_id">
+				type_id = #type_id#
+			</isNotNull>
+			<isNotNull prepend="," property="title">
+				title = #title#
+			</isNotNull>
+			<isNotNull prepend="," property="content">
+				content = #content#
+			</isNotNull>
+			<isNotNull prepend="," property="priority">
+				priority = #priority#
+			</isNotNull>
+			<isNotNull prepend="," property="modify_time">
+				modify_time = #modify_time#
+			</isNotNull>
+			<isNotNull prepend="," property="modify_user">
+				modify_user = #modify_user#
+			</isNotNull>
+			<isNotNull prepend="," property="rece_obj">
+				rece_obj = #rece_obj#
+			</isNotNull>
+		</dynamic>
+		WHERE notice_id = #notice_id#
+	</update>
+	
+	<!-- 修改的选中人员Store -->
+	<select id="queryCheckedStore" parameterClass="dto" resultClass="dto">
+		SELECT 
+			userid AS 'value',
+			CONCAT(username,'[',deptname,']') AS 'text' 
+		FROM eauser t 
+			LEFT JOIN eadept t1 ON t.DEPTID=t1.DEPTID
+		where userid in($rece_obj$) 
+		ORDER BY t.DEPTID
+	</select>
+	
+	<!-- 修改的未选中人员Store -->
+	<select id="queryNoCheckedStore" parameterClass="dto" resultClass="dto">
+		SELECT 
+			userid AS 'value',
+			CONCAT(username,'[',deptname,']') AS 'text' 
+		FROM eauser t 
+			LEFT JOIN eadept t1 ON t.DEPTID=t1.DEPTID
+		where userid not in($rece_obj$) 
+		ORDER BY t.DEPTID
+	</select>
+	
+	<!-- 修改的选中角色 -->
+	<select id="queryCheckedRoleStore" parameterClass="dto" resultClass="dto">
+		SELECT 
+			roleid AS 'value',
+			CONCAT(ROLENAME,'[',deptname,']') AS 'text' 
+		FROM earole t 
+			LEFT JOIN eadept t1 ON t.DEPTID=t1.DEPTID
+		where roleid in($rece_obj$) 
+		ORDER BY t.DEPTID
+	</select>
+	
+	<!-- 修改的未选中角色 -->
+	<select id="queryNoCheckedRoleStore" parameterClass="dto" resultClass="dto">
+		SELECT 
+			roleid AS 'value',
+			CONCAT(ROLENAME,'[',deptname,']') AS 'text' 
+		FROM earole t 
+			LEFT JOIN eadept t1 ON t.DEPTID=t1.DEPTID
+		where roleid not in($rece_obj$) 
+		ORDER BY t.DEPTID
+	</select>
+	
+	<!-- 按通告类型分组统计未读取个数 -->
+	<select id="statsUnReadByUserid" parameterClass="dto" resultClass="dto">
+		SELECT 
+			user_id,type_id,type_name,type_code,COUNT(1) AS stats
+		FROM notice_receive 
+			LEFT JOIN notice USING(notice_id)
+			LEFT JOIN notice_type USING(type_id)
+		WHERE user_id=#userid# AND unread='0' AND isdelete='0'
+		GROUP BY user_id,type_id,type_name,type_code
+	</select>
+	
+</sqlMap>

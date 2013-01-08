@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 设备监控 -->
+<sqlMap namespace="deviceMag">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 省份 -->
+	<select id="queryProvinces" resultClass="dto">
+		SELECT DISTINCT a.Province pid,
+						b.SiteCode id,
+						b.sitename NAME 
+						FROM repeaterinfo a LEFT OUTER JOIN site b ON a.Province=b.SiteCode 
+						WHERE a.ParentRepID=0 AND b.Flag='0'
+	</select>
+	
+	<!-- 地市 -->
+	<select id="queryCitys" parameterClass="dto" resultClass="dto">
+		SELECT DISTINCT 0 pid,
+						b.siteCode id,
+						b.parentsite parent,
+						b.sitename NAME 
+						FROM repeaterinfo a LEFT OUTER JOIN site b ON a.city=b.SiteCode  
+						WHERE  b.parentsite=a.Province AND a.ParentRepID=0
+		<dynamic>
+			<isNotEmpty property="id"> 
+				AND a.Province= #id#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 取下位机 -->
+	<select id="queryRepeater" parameterClass="dto" resultClass="dto">
+		SELECT DISTINCT a.repeaterid id,
+						a.parentrepid pid,
+						a.stationname NAME 
+						FROM repeaterinfo a 
+						WHERE 1=1
+		<dynamic>
+			<isNotEmpty property="parentrepid">
+				 and a.ParentRepID= #parentrepid#
+			</isNotEmpty>
+			<isNotEmpty property="province">
+				 and a.province= #province#
+			</isNotEmpty>
+			<isNotEmpty property="city"> 
+				 AND a.city= #city#
+			</isNotEmpty>
+		</dynamic>
+		   ORDER BY a.repeaterid ASC
+	</select>
+	
+	<!-- 取下位机参数 -->
+	<select id="queryStatus" parameterClass="dto" resultClass="dto">
+		SELECT  paramcode,
+				paramname,
+				val1,
+				rval1,
+				dataunit,
+				uptime,
+				reflagtype
+				FROM repeaterparam WHERE 
+		<dynamic>
+			<isNotEmpty property="id">
+				repeaterid= #id#
+			</isNotEmpty>
+			<isNotEmpty property="flag">
+				 AND reflag= #flag#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 取下位机参数总数 -->
+	<select id="queryStatusCount" parameterClass="dto" resultClass="dto">
+		SELECT count(*) count
+				FROM repeaterparam WHERE 
+		<dynamic>
+			<isNotEmpty property="id">
+				repeaterid= #id#
+			</isNotEmpty>
+			<isNotEmpty property="flag">
+				 AND reflag= #flag#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 根据协议取设备类型 -->
+	<select id="selectByProtocol" parameterClass="dto" resultClass="dto">
+		SELECT hardname,
+			   devicetype 
+			   FROM deviceType WHERE 
+		<dynamic>
+			<isNotEmpty property="protype">
+				protype= #protype#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 获取下位机编号，电话号码 -->
+	<select id="information" parameterClass="dto" resultClass="dto">
+		SELECT CONCAT(StationID,# #,StatSubId) id,
+				StatTel tel,
+				channelcode,
+				channelname,
+				stationID,
+				statSubId,
+				ProType
+				FROM repeaterinfo where 
+		<dynamic>
+			<isNotEmpty property="repeaterid">
+				repeaterid= #repeaterid#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 获取下位机所有信息 -->
+	<select id="informationAll" parameterClass="dto" resultClass="dto">
+		select protype,
+				stationname,
+				devicetype,
+				province,
+				city,
+				stationid,
+				statsubid,
+				stattel,
+				ip,
+				setdate,
+				basestatcode,
+				site,
+				serid,
+				channelname,
+				x,
+				y,
+				note,
+				channelcode 
+		from repeaterinfo where 1=1 and 
+		<dynamic>
+			<isNotEmpty property="repeaterid">
+				repeaterid= #repeaterid#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 保存下位机信息 -->
+	<update id="updateRepeaterInfo" parameterClass="dto">
+		UPDATE repeaterinfo 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="protype">
+				 protype=#protype# 
+			</isNotNull>
+			<isNotNull prepend="," property="devicetype">
+				 devicetype=#devicetype#
+			</isNotNull>
+			<isNotNull prepend="," property="stationid">
+				 stationid=#stationid#
+			</isNotNull>
+			<isNotNull prepend="," property="statsubid">
+				 statsubid=#statsubid#
+			</isNotNull>
+			<isNotNull prepend="," property="stationname">
+				 stationname=#stationname#
+			</isNotNull>
+			<isNotNull prepend="," property="setdate">
+				 setdate=#setdate#
+			</isNotNull>
+			<isNotNull prepend="," property="site">
+				 site=#site#
+			</isNotNull>
+			<isNotNull prepend="," property="province">
+				 province=#province#
+			</isNotNull>
+			<isNotNull prepend="," property="city">
+				 city=#city#
+			</isNotNull>
+			<isNotNull prepend="," property="x">
+				 x=#x#
+			</isNotNull>
+			<isNotNull prepend="," property="y">
+				 y=#y#
+			</isNotNull>
+			<isNotNull prepend="," property="serid">
+				 serid=#serid#
+			</isNotNull>
+			<isNotNull prepend="," property="stattel">
+				 stattel=#stattel#
+			</isNotNull>
+			<isNotNull prepend="," property="ip">
+				 ip=#ip#
+			</isNotNull>
+			<isNotNull prepend="," property="statustime">
+				 statustime=#statustime#
+			</isNotNull>
+			<isNotNull prepend="," property="note">
+				 note=#note#
+			</isNotNull>
+			<isNotNull prepend="," property="basestatcode">
+				 basestatcode=#basestatcode#
+			</isNotNull>
+			<isNotNull prepend="," property="noalarmflg">
+				 noalarmflg=#noalarmflg#
+			</isNotNull>
+			<isNotNull prepend="," property="route">
+				 route=#route#
+			</isNotNull>
+		</dynamic>
+		where repeaterid=#repeaterid#
+	</update>
+	
+	<!-- 获取当前市下属多少个主机 -->
+	<select id="getInformationCount" parameterClass="dto" resultClass="dto">
+		SELECT LPAD(CAST(CONV(COUNT(*)+1,10,16) AS CHAR),4,'0') num
+			   FROM repeaterinfo WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="province">
+				 AND province=#province#
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				 and city=#city#
+			</isNotEmpty>
+		</dynamic>
+		 AND ParentRepID=0
+	</select>
+	
+	<!-- 新增下位机 -->
+	<insert id="insertRepeater" parameterClass="dto">
+		INSERT INTO repeaterinfo(ParentRepid,protype,
+				DeviceType,
+				StationID,StatSubId,StationName,
+				Province,
+				City,
+				channelcode,
+				report,stattel
+				)VALUES (#parentrepid#,#protype#,#devicetype#,#stationid#,#statsubid#,#stationname#,#province#,#city#,#channelcode#,#report#,#stattel#)
+	</insert>
+	
+	<!-- 获取最后一次插入的ID -->
+	<select id="selectLastID" resultClass="dto">
+		SELECT @@IDENTITY id
+	</select>
+	
+	<!-- 获取主机下属多少个从机 -->
+	<select id="getSubCount" parameterClass="dto" resultClass="dto">
+		SELECT COUNT(*) num 
+			  FROM repeaterinfo 
+			  WHERE 
+		<dynamic>
+			<isNotEmpty property="parentrepid">
+				ParentRepID=#parentrepid#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 根据主机id获取从机设备 -->
+	<select id="selectDevice" parameterClass="dto" resultClass="dto">
+		SELECT devicetype value,
+				HardName text 
+				FROM devicetype 
+				WHERE protype=(SELECT protype FROM repeaterinfo WHERE repeaterid=#repeaterid#)
+	</select>
+	
+	<!-- 获取最大子机信息 -->
+	<select id="selectSubInfo" parameterClass="dto" resultClass="dto">
+		SELECT * FROM (SELECT * FROM repeaterinfo WHERE parentRepID = #parentrepid# ) a 
+			WHERE  a.statSubId = (SELECT MAX(statSubId) FROM repeaterinfo WHERE parentRepID = #parentrepid#)
+	</select>
+	
+	<!-- 复制下位机 -->
+	<insert id="copyRepea" parameterClass="dto">
+		INSERT INTO repeaterinfo
+		            (parentrepid,
+		             ProType,
+		             StationName,
+		             DeviceType,
+		             Province,
+		             City,
+		             StationID,
+		             StatSubId,
+		             StatTel,
+		             IP,
+		             SetDate,
+		             BaseStatCode,
+		             Site,
+		             SerID,
+		             ChannelName,
+		             channelcode,
+		             statustime,
+		             route,
+		             noalarmflg,
+		             X,
+		             Y,
+		             Note,report)
+		SELECT
+		<isNotEmpty property="parentrepid">
+						#parentrepid#,
+		</isNotEmpty>
+		<isEmpty property="parentrepid">
+						parentrepid,
+		</isEmpty>
+			        ProType,
+			        StationName,
+			        DeviceType,
+			        Province,
+			        City,
+			        StationID,
+			        StatSubId,
+			        StatTel,
+			        IP,
+			        SetDate,
+			        BaseStatCode,
+			        Site,
+			        SerID,
+			        ChannelName,
+		<isNotEmpty property="channelcode">
+			        13,
+		</isNotEmpty>
+		<isEmpty property="channelcode">
+			        channelcode,
+		</isEmpty>
+			        statustime,
+			        route,
+			        noalarmflg,
+			        X,
+			        Y,
+			        Note,
+		<isNotEmpty property="report">
+			        report
+		</isNotEmpty>
+		<isEmpty property="report">
+			        ''
+		</isEmpty>
+			       FROM repeaterinfo WHERE repeaterid = #repeaterid#
+	</insert>
+	
+	<!-- 复制站点参数 -->
+	<insert id="copyParam" parameterClass="dto">
+		INSERT INTO repeaterparam
+		            (repeaterid,
+		             paramclass,
+		             paramcode,
+		             paramname,
+		             datatype,
+		             datalen,
+		             dataunit,
+		             alarmtype,
+		             reflag,
+		             SArithmetic,
+		             RArithmetic,
+		             HtoD,
+		             NeedW,
+		             val1,
+		             rval1,
+		             uptime,
+		             alarmtime,
+		             resettime,
+		             alarmnote,
+		             reflagtype)
+		SELECT
+		         	#newRepeaterid#,
+		             paramclass,
+		             paramcode,
+		             paramname,
+		             datatype,
+		             datalen,
+		             dataunit,
+		             alarmtype,
+		             reflag,
+		             SArithmetic,
+		             RArithmetic,
+		             HtoD,
+		             NeedW,
+		             val1,
+		             rval1,
+		             uptime,
+		             alarmtime,
+		             resettime,
+		             alarmnote,
+		             reflagtype FROM repeaterparam WHERE repeaterid = #repeaterid#
+	</insert>
+	
+	<!-- 删除下位机 -->
+	<delete id="deleRepea" parameterClass="dto">
+		DELETE FROM repeaterinfo WHERE repeaterid= #repeaterid#
+	</delete>
+	
+	<!-- 删除下位机参数 -->
+	<delete id="deleteRepeaPara" parameterClass="dto">
+		DELETE FROM repeaterparam WHERE repeaterid= #repeaterid#
+	</delete>
+	
+	<!-- 删除监控量临时表 -->
+	<delete id="deleteRepeaParaTemp" parameterClass="dto">
+		DELETE FROM repeaterparamtemp WHERE repeaterid= #repeaterid#
+	</delete>
+	
+	<!-- 查询指定下位机 -->
+	<select id="query" parameterClass="dto" resultClass="dto">
+		SELECT repeaterid,
+			   stationid,
+			   statsubid,
+			   stationname,
+			   site,
+			   stattel,
+			   statustime,
+			   note 
+			   FROM repeaterinfo WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="province">
+				AND province=#province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				 And city=#city#
+			</isNotEmpty>
+			<isNotEmpty property="protocol">
+				 And protype=#protocol#
+			</isNotEmpty>
+			<isNotEmpty property="device">
+				 and devicetype=#device#
+			</isNotEmpty>
+			<isNotEmpty property="stattel">
+				 and stattel=#stattel#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 查询的总记录数 -->
+	<select id="count" parameterClass="dto" resultClass="dto">
+		SELECT count(*) num
+			   FROM repeaterinfo WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="province">
+				AND province=#province# 
+			</isNotEmpty>
+			<isNotEmpty property="city">
+				 And city=#city#
+			</isNotEmpty>
+			<isNotEmpty property="protocol">
+				 And protype=#protocol#
+			</isNotEmpty>
+			<isNotEmpty property="device">
+				 and devicetype=#device#
+			</isNotEmpty>
+			<isNotEmpty property="stattel">
+				 and stattel=#stattel#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<!-- 查询t_reflag中的数据 -->
+	<select id="t_reflag" parameterClass="dto" resultClass="dto">
+		SELECT id value,typename text FROM t_reflag 
+				WHERE 1=1 
+		<dynamic>
+			<isNotEmpty property="typeid">
+				AND typeid=#typeid#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<!-- 查看连接标识 -->
+	<select id="queryConnFlag" parameterClass="dto" resultClass="dto">
+		SELECT  
+			connectflag,report,channelcode,stationid,statsubid
+		FROM 
+			repeaterinfo 
+		WHERE 
+			1=1 AND repeaterid = #repeaterid#
+	</select>
+	
+	<!-- 更新参数数据 -->
+	<update id="updateVal1Item" parameterClass="dto">
+	    UPDATE repeaterparam
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="val1">
+				val1 = #val1#
+			</isNotNull>
+			<isNotEmpty prepend="," property="uptime">
+				uptime=#uptime#
+			</isNotEmpty>
+		</dynamic>
+		WHERE recid=#recid#
+	</update>
+	
+	<!-- 更新远程值 -->
+	<update id="updateRVal1Item" parameterClass="dto">
+		UPDATE repeaterparam 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="rval1">
+				 rval1 = #rval1# 
+			</isNotNull>
+			<isNotNull prepend="," property="uptime">
+				 uptime = #uptime# 
+			</isNotNull>
+		</dynamic>
+		WHERE paramcode = #paramcode# 
+	</update>
+	
+	<!-- 更新端口 -->
+	<update id="updatePort" parameterClass="dto">
+		UPDATE repeaterinfo
+			SET report = #report#
+			WHERE repeaterid IN(SELECT
+                      a.repeaterid
+                    FROM (SELECT *
+                          FROM repeaterinfo) a
+                    WHERE a.stationid = #stationid#
+                        AND a.statsubid = #statsubid#
+                         OR a.parentrepid = (SELECT
+                                               b.repeaterid
+                                             FROM (SELECT *
+                                                   FROM repeaterinfo) b
+                                             WHERE b.stationid = #stationid#
+                                                 AND b.statsubid = #statsubid#))
+	</update>
+	
+	<!-- 判断是否可以读监控列表 -->
+	<select id="judge" parameterClass="dto" resultClass="dto">
+		SELECT flag,locktime FROM shareflag WHERE repeaterid=#repeaterid#
+	</select>
+	
+	<!-- 新增监控列表标志 -->
+	<update id="addFlag"  parameterClass="dto">
+		INSERT INTO shareflag VALUES(#repeaterid#,#flag#)
+	</update>
+	
+	<!-- 更新标记 -->
+	<update id="update" parameterClass="dto">
+		UPDATE shareflag 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="flag">
+				 flag = #flag# 
+			</isNotNull>
+			<isNotNull prepend="," property="locktime">
+				 locktime = #locktime# 
+			</isNotNull>
+			<isNotNull prepend="," property="cancel">
+				 cancel = #cancel# 
+			</isNotNull>
+		</dynamic>
+			WHERE repeaterid=#repeaterid#
+	</update>
+	
+	<!-- 存在的监控量 -->
+	<select id="existenceParam" parameterClass="dto" resultClass="dto">
+		SELECT paramcode,paramname FROM repeaterparam WHERE repeaterid=#repeaterid#
+	</select>
+	
+	<!-- 监控量总数 -->
+	<select id="countExit" parameterClass="dto" resultClass="dto">
+		SELECT count(*) num FROM repeaterparam WHERE repeaterid=#repeaterid#
+	</select>
+	
+	<!-- 不存在的监控量 -->
+	<select id="noExitParam" parameterClass="dto" resultClass="dto">
+		 SELECT paramcode,paramname FROM moncode a ,repeaterinfo C WHERE  C.repeaterid=#repeaterid# AND C.protype=A.protype AND NOT EXISTS 
+			(SELECT * FROM repeaterparam b WHERE a.ParamCode=b.ParamCode AND B.repeaterid = C.repeaterid)
+	</select>
+	
+	<!-- 不存在监控量总数 -->
+	<select id="countNoExit" parameterClass="dto" resultClass="dto">
+		SELECT count(*) num FROM moncode a ,repeaterinfo C WHERE  C.repeaterid=#repeaterid# AND C.protype=A.protype AND NOT EXISTS 
+			(SELECT * FROM repeaterparam b WHERE a.ParamCode=b.ParamCode AND B.repeaterid = C.repeaterid)
+	</select>
+	
+	<!-- 根据站点编号，设备编号获取repeaterd -->
+	<select id="queryRepeaterid" parameterClass="dto" resultClass="dto">
+		SELECT repeaterid,
+				province,city FROM repeaterinfo WHERE stationid=#stationid# AND statsubid=#statsubid#
+	</select>
+	
+	<!-- 根据站点编号，设备编号获取协议类型 -->
+	<select id="queryProtype" parameterClass="dto" resultClass="dto">
+		SELECT protype,repeaterid,city,province FROM repeaterinfo WHERE stationid=#stationid# AND statsubid= #statsubid#
+	</select>
+	
+	<!-- 获取paramclass -->
+	<select id="queryClass"  parameterClass="dto" resultClass="dto">
+		SELECT paramclass FROM moncode WHERE paramcode=#paramcode# AND protype=#protype#
+	</select>
+	
+	<!-- 获取刷新站点树需要的信息 -->
+	<select id="refreshTree" parameterClass="dto" resultClass="dto">
+		SELECT parentrepid,repeaterid FROM repeaterinfo WHERE stationid=#stationid# AND statsubid=#statsubid#
+	</select>
+	
+	<!-- 查询该站点是否可操作 -->
+	<select id="isOk" parameterClass="dto" resultClass="dto">
+		SELECT flag FROM repeaterinfo WHERE repeaterid= #repeaterid#
+	</select>
+	
+	<!-- 更新标志 -->
+	<update id="updateFlag" parameterClass="dto">
+		 UPDATE repeaterinfo SET flag= #flag# WHERE repeaterid= #repeaterid#
+	</update>
+	
+	
+	<!-- 修改repeaterparam中的站点编号 -->
+	<update id="updateStation" parameterClass="dto">
+		UPDATE repeaterparam SET val1= #stationid#,RVal1=#stationid# WHERE repeaterid= #repeaterid# AND paramcode='0101'
+	</update>
+	
+	<!-- 修改repeaterparam中的设备编号 -->
+	<update id="updateStatsub" parameterClass="dto">
+		UPDATE repeaterparam SET val1= #statsubid#,RVal1= #statsubid# WHERE repeaterid= #repeaterid# AND paramcode='0102'
+	</update>
+	
+	<!-- 修改repeaterinfo中的站点编号,设备编号 -->
+	<update id="updateInfoStation" parameterClass="dto">
+	 	UPDATE repeaterinfo 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="stationid">
+				 stationid= #stationid#
+			</isNotNull>
+			<isNotNull prepend="," property="statsubid">
+				 statsubid= #statsubid#
+			</isNotNull>
+		</dynamic>
+		 WHERE repeaterid= #repeaterid#
+	</update>
+	
+	<!-- 判断站点编号，设备编号是否重复 -->
+	<select id="repeat" parameterClass="Dto" resultClass="int">
+		SELECT repeaterid FROM repeaterinfo WHERE stationid=#stationid# AND statsubid=#statsubid#
+	</select>
+	
+	<!-- 初始化时修改repeaterinfo中的站点编号、设备编号、电话 -->
+	<update id="updaterepeaterinfo" parameterClass="dto">
+	 	UPDATE repeaterinfo SET stationid= #stationid#,statsubid= #statsubid# WHERE repeaterid= #repeaterid#
+	</update>	
+	<!-- 修改repeaterparam中的站点电话 -->
+	<update id="updateStatTel" parameterClass="dto">
+		UPDATE repeaterparam SET val1= #stattel#,RVal1=#stattel# WHERE repeaterid= #repeaterid# AND paramcode='0111'
+	</update>
+	
+	<!-- 导入Excel站点信息到数据库 -->
+	<insert id="importExcel" parameterClass="dto">
+		INSERT INTO repeaterinfo(
+				protype,
+				devicetype,
+				StationID,
+				StatSubId,
+				StationName,
+				Province,
+				City,
+				statTel,
+				parentrepid
+		)
+		VALUES (
+				#protype#,
+				#devicetype#,
+				#stationid#,
+				#statsubid#,
+				#stationname#,
+				#province#,
+				#city#,
+				#stattel#,
+				#parentrepid#
+		)
+	</insert>
+	
+	<!-- 通过名称查找对应的协议类型值 -->
+	<select id="getProTypeByName" parameterClass="Dto" resultClass="String">
+		select protype from protocol where proname like '%$protype$%'
+	</select>
+	
+	<!-- 通过名称查找对应的协议类型值 -->
+	<select id="getDeviceTypeTypeByName" parameterClass="Dto" resultClass="String">
+		select devicetype from devicetype where protype = #protype# and hardname like '%$devicetype$%'
+	</select>
+	
+	<!-- 通过名称查找对应的协议类型值 -->
+	<select id="getProvinceByName" parameterClass="Dto" resultClass="String">
+		select sitecode from site where parentsite = '00' and sitename like '%$province$%'
+	</select>
+	
+	<!-- 通过名称查找对应的协议类型值 -->
+	<select id="getCityByName" parameterClass="Dto" resultClass="String">
+		select sitecode from site where parentsite = #province# and sitename like '%$city$%'
+	</select>
+	
+	<!-- 通过直放站编号和设备编号，查找主机repeaterid -->
+	<select id="getRepeaterid" parameterClass="Dto" resultClass="String">
+		select repeaterid from repeaterinfo where StationID = #stationid# and StatSubId='00'
+	</select>
+	
+	<!-- 通过直放站IDH查找设备编号的最大值 -->
+	<select id="getMaxStatSubId" parameterClass="Dto" resultClass="String">
+		SELECT MAX(StatSubId) FROM repeaterinfo WHERE ParentRepID = #parentrepid#
+	</select>
+	
+	<!-- 验证导入的直放站是否重复 -->
+	<select id="checkAddForStation" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT count(1) FROM repeaterinfo where stationid = #stationid# and StatSubId= #statsubid#
+	</select>
+	
+	<!-- 判断是否是主机 -->
+	<select id="isHost" parameterClass="Dto" resultClass="int">
+		SELECT parentrepid FROM repeaterinfo WHERE repeaterid=#repeaterid#
+	</select>
+	
+	<!-- 修改从机站点编号 -->
+	<update id="updateSub" parameterClass="Dto">
+		UPDATE repeaterinfo SET stationid=#stationid# WHERE parentrepid= #repeaterid#
+	</update>
+	
+	<!-- 获取错误原因 -->
+	<select id="error" parameterClass="Dto" resultClass="Dto">
+		SELECT respname FROM respflag WHERE protype=#protype# AND respcode=#respcode#
+	</select>
+	
+	<!-- 获取repeaterparam信息 -->
+	<select id="queryParam" parameterClass="Dto" resultClass="Dto">  
+		SELECT * FROM moncode WHERE paramcode=#paramcode# AND protype=#protype#
+	</select>
+	
+		
+	<!-- 读取监控列表 存储过程 -->
+	<parameterMap id="nms.reloadRepeaterParam.dto" class="java.util.Map">
+		<parameter property="v_repeaterid" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN" /> <!-- 入参 -->
+		<parameter property="appCode" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT" /> <!-- 执行代码 -->
+		<parameter property="errorMsg" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT" /> <!-- 出错信息 -->
+	</parameterMap>
+	<procedure id="reloadRepeaterParam" parameterMap="nms.reloadRepeaterParam.dto">
+		{call reloadRepeaterParam(?,?,?)}
+	</procedure>
+	
+	<!-- 复制站点参数 -->
+	<insert id="insertRepeaParaTemp" parameterClass="dto">		
+		INSERT INTO repeaterparamtemp 
+			(
+				repeaterid, 
+				paramcode
+			)
+		VALUES
+			(
+				#repeaterid#, 
+				#paramcode#
+			)
+	</insert>
+	
+	<!-- 获取param长度 -->
+	<select id="queryDataLen" parameterClass="Dto" resultClass="dto">
+		SELECT datalen,dataType FROM repeaterparam WHERE repeaterid=#repeaterid# AND paramcode=#paramcode# LIMIT 0,1
+	</select>
+</sqlMap>

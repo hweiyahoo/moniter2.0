@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 命令策略 -->
+<sqlMap namespace="update">
+	<!-- 查询所有参数 -->
+	<select id="queryParam" parameterClass="dto" resultClass="dto">
+		SELECT * FROM repeaterparam WHERE repeaterid=(SELECT repeaterid FROM repeaterinfo 
+			WHERE stationid=#stationid# AND statsubid=#statsubid#)
+	</select>
+	
+	<!-- 更新参数 -->
+	<update id="updateParam" parameterClass="dto">
+		update repeaterparam 
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="val1">
+				 val1=#val1#
+			</isNotNull>
+			<isNotNull prepend="," property="rval1">
+				rval1=#rval1#
+			</isNotNull>
+			<isNotNull prepend="," property="alarmnote">
+				alarmnote=#alarmnote#
+			</isNotNull>
+			<isNotNull prepend="," property="alarmtime">
+				alarmtime=#alarmtime#
+			</isNotNull>
+		</dynamic>
+		where repeaterid=#repeaterid# and paramcode=#paramcode#
+	</update>
+	
+	<!-- 删除旧参数 -->
+	<delete id="deleteParam" parameterClass="dto">
+		DELETE FROM repeaterparam WHERE repeaterid=(SELECT repeaterid FROM repeaterinfo WHERE stationid=#stationid# AND statsubid=#statsubid#)
+	</delete>
+	<!-- 插入新参数 -->
+	<insert id="insertParam" parameterClass="dto">
+		INSERT INTO repeaterparam 
+				(repeaterid,
+				paramclass,
+				paramcode,
+				paramname,
+				datatype,
+				datalen,
+				dataunit,
+				alarmtype,
+				reflag,
+				sarithmetic,
+				rarithmetic,
+				htod,
+				needw,
+				reflagtype)
+		SELECT repeaterid,
+				paramclass,
+				paramcode,
+				paramname,
+				datatype,
+				datalen,
+				dataunit,
+				alarmtype,
+				reflag,
+				sarithmetic,
+				rarithmetic,
+				htod,
+				needw,
+				reflagtype 
+				FROM (SELECT repeaterid,protype FROM repeaterinfo WHERE stationid=#stationid# AND statsubid=#statsubid#) a ,moncode b 
+				WHERE a.protype=b.protype AND b.paramcode=#paramcode#
+		
+	</insert>
+	
+	<!-- 保存告警信息 -->
+	<insert id="alarm" parameterClass="dto">
+		INSERT INTO alarmlog(repeaterid,alarmtime,detail,province,city,aitemnum,alarmtype,paramcode) 
+				VALUES(#repeaterid#,#alarmtime#,#detail#,#province#,#city#,#aitemnum#,#alarmtype#,#paramcode#) 
+	</insert>
+	
+	<!-- 修改告警信息 -->
+	<update id="updateAlarm" parameterClass="dto">
+		UPDATE alarmlog SET flag=#flag#,recovertime=#recovertime# WHERE repeaterid=#repeaterid# AND alarmtime= (SELECT MAX(alarmtime) FROM alarmlog WHERE repeaterid=#repeaterid# AND paramcode=#paramcode#)
+	</update>
+	
+	<!-- 查看是否存在未处理的相同告警 -->
+	<select id="query" parameterClass="dto" resultClass="int">
+		SELECT alarmid FROM alarmlog WHERE repeaterid=#repeaterid# AND detail =#detail# AND flag='1'
+	</select>
+	
+	<!-- 修改告警时间 -->
+	<update id="modifyTime" parameterClass="dto">
+		UPDATE alarmlog SET alarmtime=#alarmtime# WHERE alarmid=#alarmid# 
+	</update>
+	
+	<!-- 修改repeaterinfo中的信息 -->
+	<update id="updateInfo" parameterClass="dto">
+		update repeaterinfo
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="devicetype">
+				 devicetype=#devicetype#
+			</isNotNull>
+			<isNotNull prepend="," property="x">
+				x=#x#
+			</isNotNull>
+			<isNotNull prepend="," property="y">
+				y=#y#
+			</isNotNull>
+		</dynamic>
+		where stationid=#stationid# AND statsubid=#statsubid#
+	</update>
+	
+	<!-- 获取paramclass -->
+	
+</sqlMap>
+

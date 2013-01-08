@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<struts-config>
+	<!-- 配置ActionFormBean -->
+	<form-beans>
+		<!-- 公共Form -->
+		<form-bean name="commonActionForm" type="org.eredlab.g4.rif.web.CommonActionForm" />
+	</form-beans>
+
+	<!-- Action映射 -->
+	<action-mappings type="org.apache.struts.action.ActionMapping">
+		<!-- 命令策略 -->
+		<action name="commonActionForm" path="/cmdprase" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.CmdPraseAction">
+			<forward name="CmdPraseMainInit" path="/nms/cfg/cmdPraseMain.jsp" />
+			<forward name="CmdPraseMngInit" path="/nms/cfg/cmdPraseMng.jsp" />
+			<forward name="CmdPraseSubInit" path="/nms/cfg/cmdPraseSub.jsp" />
+			<forward name="CmdPraseSelectInit" path="/nms/cfg/cmdPraseMng_select.jsp" />
+		</action>  
+		
+		<!-- 直放站轮询设置 -->
+		<action name="commonActionForm" path="/repcfg" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.RepeaterPollCfgAction">
+			<forward name="repcfgInit" path="/nms/repeaterManager/repeaterPollCfg.jsp" />
+			<forward name="repeaterInit" path="/nms/repeaterManager/repeaterPollCfg_choise.jsp" />
+			<forward name="moniterParamsInit" path="/nms/repeaterManager/repeaterPollCfg_params.jsp" />
+		</action>  
+		
+		<!-- 设备监控 -->
+		<action name="commonActionForm" path="/devicemnt" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.repeaterManager.web.DeviceMonitorAction">
+			<forward name="deviceMntInit" path="/nms/repeaterManager/deviceMonitor.jsp" />
+			<forward name="setInit" path="/nms/repeaterManager/deviceMonitor_setInit.jsp" />
+			<forward name="statusInit" path="/nms/repeaterManager/deviceMonitor_status.jsp" />
+			<forward name="paramsInit" path="/nms/repeaterManager/deviceMonitor_params.jsp" />
+			<forward name="baseInit" path="/nms/repeaterManager/deviceMonitor_base.jsp" />
+		</action>  
+		
+		<!-- 编辑控件管理 -->
+		<action name="commonActionForm" path="/editormng" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.EditorMngAction">
+			<forward name="editorMngInit" path="/nms/cfg/editorMng.jsp" />
+			<forward name="selectMoncodeInit" path="/nms/cfg/editorMng_select.jsp" />
+		</action>
+		
+		<!-- 个人事务管理 ** 消息盒 -->
+		<action name="commonActionForm" path="/msgbox" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.personalaffairs.web.MsgboxAction">
+			<forward name="msgboxInit" path="/nms/personalaffairs/msgbox.jsp" />
+		</action>
+		
+		<!-- 级联下拉框 -->
+		<action name="commonActionForm" path="/cbx" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.pub.web.ComBoxAction">
+		</action>  
+		
+		<!-- 站点地理位子 -->
+		<action name="commonActionForm" path="/map" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.map.web.MapAction">
+			<forward name="mapbarInit" path="/nms/map/mapbar.jsp" />
+		</action>  
+		
+		<!-- portal显式 -->
+		<action name="commonActionForm" path="/portal" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.portal.web.PortalAction">
+			<forward name="calendaInit" path="/nms/portal/calendar.jsp" />
+			<forward name="noticeInit" path="/nms/portal/notice.jsp" />
+			<forward name="memoInit" path="/nms/portal/memo.jsp" />
+			<forward name="weatherInit" path="/nms/portal/weather.jsp" />
+			<forward name="alarmInit" path="/nms/portal/alarm.jsp" />
+		</action>  
+		
+		<!-- 便签 -->
+		<action name="commonActionForm" path="/memo" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.portal.web.MemoAction">
+		</action>  
+	</action-mappings>
+</struts-config>

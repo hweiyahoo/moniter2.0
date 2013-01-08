@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 告警状况 -->
+<sqlMap namespace="alarmState">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 列表 -->
+	<select id="checkItem" parameterClass="dto" resultClass="dto">
+	</select> 
+	
+	<!-- 严重告警和重要告警列表 -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT 
+			DISTINCT 
+			a.repeaterid,
+			b.stationname,
+			b.site,
+			b.Province,
+			d.sitename    AS provincename,
+			b.city,
+			c.sitename    AS cityname,
+			f.factname
+		  FROM alarmlog a 
+			LEFT JOIN repeaterinfo b ON a.RepeaterID = b.RepeaterID
+			LEFT JOIN repeaterparam e ON a.RepeaterID = e.RepeaterID AND e.ParamCode='0002'
+			LEFT JOIN site c ON b.City = c.SiteCode AND b.Province=c.ParentSite AND c.flag = '1' and c.type=1
+			LEFT JOIN site d ON b.Province = d.SiteCode AND d.flag = '0' and d.type=1
+			LEFT JOIN factoryinfo f ON f.factflag = e.rval1 AND f.ProType AND b.ProType
+		  WHERE 1=1 
+			AND (a.AlarmType = '20' OR a.AlarmType = '30')
+	</select>
+	
+	<!-- 严重告警和重要告警总记录数 -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT
+		 count(1)
+		FROM (
+			SELECT 
+				DISTINCT 
+				a.repeaterid,
+				b.stationname,
+				b.site,
+				b.Province,
+				d.sitename    AS provincename,
+				b.city,
+				c.sitename    AS cityname,
+				f.factname
+			    FROM alarmlog a 
+				LEFT JOIN repeaterinfo b ON a.RepeaterID = b.RepeaterID
+				LEFT JOIN repeaterparam e ON a.RepeaterID = e.RepeaterID AND e.ParamCode='0002'
+				LEFT JOIN site c ON b.City = c.SiteCode AND b.Province=c.ParentSite AND c.flag = '1' and c.type=1
+				LEFT JOIN site d ON b.Province = d.SiteCode AND d.flag = '0' and d.type=1
+				LEFT JOIN factoryinfo f ON f.factflag = e.rval1 AND f.ProType AND b.ProType
+			    WHERE 1=1 
+				AND (a.AlarmType = '20' OR a.AlarmType = '30')
+		) a
+	</select>
+	
+	
+	<!-- 一般告警列表 -->
+	<select id="queryItemForGeneralList" parameterClass="dto" resultClass="dto">
+		SELECT 
+			DISTINCT 
+			a.repeaterid,
+			b.stationname,
+			b.site,
+			b.Province,
+			d.sitename    AS provincename,
+			b.city,
+			c.sitename    AS cityname,
+			f.factname
+		  FROM alarmlog a 
+			LEFT JOIN repeaterinfo b ON a.RepeaterID = b.RepeaterID
+			LEFT JOIN repeaterparam e ON a.RepeaterID = e.RepeaterID AND e.ParamCode='0002'
+			LEFT JOIN site c ON b.City = c.SiteCode AND b.Province=c.ParentSite AND c.flag = '1'
+			LEFT JOIN site d ON b.Province = d.SiteCode AND d.flag = '0' and c.type=1
+			LEFT JOIN factoryinfo f ON f.factflag = e.rval1 AND f.ProType AND b.ProType and d.type=1
+		  WHERE 1=1 
+			AND a.AlarmType = '10'
+	</select>
+	
+	<!-- 一般告警总记录数 -->
+	<select id="queryItemForGeneralCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT
+		 count(1)
+		FROM (
+			SELECT 
+				DISTINCT 
+				a.repeaterid,
+				b.stationname,
+				b.site,
+				b.Province,
+				d.sitename    AS provincename,
+				b.city,
+				c.sitename    AS cityname,
+				f.factname
+			  FROM alarmlog a 
+				LEFT JOIN repeaterinfo b ON a.RepeaterID = b.RepeaterID
+				LEFT JOIN repeaterparam e ON a.RepeaterID = e.RepeaterID AND e.ParamCode='0002'
+				LEFT JOIN site c ON b.City = c.SiteCode AND b.Province=c.ParentSite AND c.flag = '1' and c.type=1
+				LEFT JOIN site d ON b.Province = d.SiteCode AND d.flag = '0' and d.type=1
+				LEFT JOIN factoryinfo f ON f.factflag = e.rval1 AND f.ProType AND b.ProType
+			  WHERE 1=1 
+				AND a.AlarmType = '10'
+		) a
+	</select>
+	
+	
+	<!-- 告警简要 -->
+	<select id="queryAlarmConciseForList" parameterClass="dto" resultClass="dto">
+		SELECT 
+				repeaterid,
+				stationname,
+				stationid,
+				statsubid,
+				site 
+		FROM repeaterinfo 
+		WHERE repeaterid= #repeaterid#
+	</select>
+	
+	<!-- 告警详细 -->
+	<select id="queryAlarmDetailForList" parameterClass="dto" resultClass="dto">
+		SELECT 
+				paramname,
+				alarmtime,
+				resettime,
+				alarmnote,
+				rval1,
+				alarmtype,
+				b.name as alarmtypename 
+		FROM repeaterparam  a
+		LEFT JOIN basetable b ON b.type='201' AND b.code = a.alarmtype
+		WHERE alarmnote != ''
+				AND paramclass='03'
+				AND repeaterid =#repeaterid#
+	</select>
+	
+	
+	<!-- 删除 -->
+	<delete id="deleteItem" parameterClass="dto">
+	
+	</delete>
+	
+	<!-- 添加 -->
+	<insert id="insertItem" parameterClass="dto">
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="updateItem" parameterClass="dto">
+	</update>
+	
+</sqlMap>

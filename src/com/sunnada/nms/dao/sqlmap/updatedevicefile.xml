@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- ������� -->
+<sqlMap namespace="updatedevicefile">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- �б� -->
+	<select id="checkItem" parameterClass="dto" resultClass="dto">
+		SELECT count(1) FROM UpdateDeviceFile 
+	</select>
+	
+	<!-- ���������� �������sql begin -->
+	<!-- �б� -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT t1.FileName,t1.FileCrc,t1.path		
+		FROM UpdateDeviceFile t1 
+		WHERE 1 = 1
+		<![CDATA[ AND DATE_FORMAT(t1.uploaddatetime,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') ]]>
+		Order by t1.uploaddatetime DESC
+	</select>
+	
+	<!-- �ܼ�¼�� -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 
+			count(1)
+		FROM
+			UpdateDeviceFile
+		WHERE 1 = 1
+		<![CDATA[ AND DATE_FORMAT(uploaddatetime,'%Y-%m-%d') = DATE_FORMAT(NOW(),'%Y-%m-%d') ]]>
+	</select>
+	
+		<!-- 插入一文件上传数据 -->
+	<insert id="insertItem" parameterClass="dto">
+		  
+		  INSERT INTO
+			UpdateDeviceFile (
+			DeviceFileid, FileName, path,uploaddatetime,FileCrc)
+		  VALUES (#devicefileid#, #filename#, #path#,#uploaddatetime#,#filecrc#)
+	</insert>
+	<delete id="deleteItem" parameterClass="dto">
+		DELETE FROM UpdateDeviceFile 
+	</delete>		
+</sqlMap>

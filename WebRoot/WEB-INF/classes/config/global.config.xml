@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd">
+	
+	<!-- 导入数据访问对象 -->
+	<import resource="classpath:config/global.dao.xml" />
+	<!-- 导入业务处理对象.权限参考模型 -->
+	<import resource="classpath:config/g4/g4.service.xml" />
+	<!-- 导入SpringBean切面监控 -->
+	<import resource="classpath:config/global.monitor.xml" />
+	<!-- 导入业务处理对象.业务系统 在开发模式下，先把模块配置文件独立开来，后面转入生产模式在做合并。-->
+	<import resource="classpath:config/app/app.service.xml" />
+</beans>

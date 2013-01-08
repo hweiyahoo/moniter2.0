@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 命令策略 -->
+<sqlMap namespace="cmdprase">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 命令策略主表 操作相关sql begin -->
+	<!-- 添加验证 -->
+	<select id="checkMainAdd" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT count(1) FROM cmdprasemain 
+		where ProType = #protype# 
+			and Cmd = #cmd#
+	</select>
+	
+	<!-- 列表 -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT 	t1.CmdMainID, 
+				t1.ProType, 
+				t2.ProName,
+				t1.Cmd, 
+				t1.Cmd1, 
+				t1.CmdName, 
+				t1.Note
+		FROM cmdprasemain t1 LEFT JOIN protocol t2 ON t1.ProType = t2.ProType
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and t1.protype = #protype#  
+			</isNotEmpty>
+		</dynamic>
+		Order by t1.ProType ASC,t1.Cmd ASC
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT 
+			count(1)
+		FROM
+			cmdprasemain
+		WHERE 1 = 1
+		<dynamic>
+			<isNotEmpty property="protype"> 
+				and protype = #protype# 
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<delete id="deleteItem" parameterClass="dto">
+		DELETE FROM cmdprasemain where CmdMainID = #cmdmainid#
+	</delete>
+	
+	<delete id="deleteAllSubItem" parameterClass="dto">
+		DELETE FROM CmdPraseSub 
+		where ProType = #protype# 
+					and Cmd = #cmd#
+	</delete>
+	
+	<insert id="insertItem" parameterClass="dto">
+		INSERT INTO cmdprasemain 
+			(
+				ProType, 
+				Cmd, 
+				Cmd1, 
+				CmdName, 
+				Note
+			)
+			VALUES
+			(
+				#protype#, 
+				#cmd#, 
+				#cmd1#, 
+				#cmdname#, 
+				#note#
+			);
+	</insert>
+
+	<update id="updateItem" parameterClass="dto">
+		UPDATE cmdprasemain
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="protype">
+				ProType = #protype#
+			</isNotNull>
+			<isNotNull prepend="," property="cmd1">
+				Cmd1 = #cmd1#
+			</isNotNull>
+			<isNotNull prepend="," property="cmdname">
+				CmdName = #cmdname#
+			</isNotNull>
+			<isNotNull prepend="," property="note">
+				Note = #note#
+			</isNotNull>
+		</dynamic>
+		WHERE CmdMainID = #cmdmainid#
+	</update>
+	<!-- 命令策略主表 操作相关sql end -->
+	
+	
+	<!-- 命令策略从表 操作相关sql begin -->
+	<!-- 添加验证 -->
+	<select id="checkSubItem" parameterClass="dto"  resultClass="java.lang.Integer">
+		SELECT count(1) FROM CmdPraseSub 
+		where ProType = #protype# 
+			and Cmd = #cmd# 
+			and paramcode = #paramcode#
+			and idx = #idx#
+	</select>
+	
+	<!-- 列表 -->
+	<select id="querySubItemForList" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			cmdsubid, 
+			protype, 
+			cmd, 
+			cmd1, 
+			idx, 
+			paramcode, 
+			paramname, 
+			note 
+		FROM CmdPraseSub
+		WHERE 
+			protype= #protype#
+			And cmd= #cmd#
+		Order By idx ASC,paramcode asc
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="querySubItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		Select count(1) 
+		from CmdPraseSub
+		Where 
+			ProType= #protype#
+			And Cmd= #cmd#
+	</select>
+	
+	<delete id="deleteSubItem" parameterClass="dto">
+		DELETE FROM CmdPraseSub where CmdSubID = #cmdsubid#
+	</delete>
+	
+	<insert id="insertSubItem" parameterClass="dto">
+		INSERT INTO cmdprasesub 
+			(
+				ProType, 
+				Cmd, 
+				Cmd1, 
+				idx, 
+				ParamCode, 
+				ParamName, 
+				Note
+			)
+			VALUES
+			(
+				#protype#, 
+				#cmd#, 
+				#cmd1#, 
+				#idx#, 
+				#paramcode#, 
+				#paramname#, 
+				#note#
+			);
+	</insert>
+
+	<update id="updateSubItem" parameterClass="dto">
+		UPDATE cmdprasesub
+		<dynamic prepend="set">
+			<isNotNull prepend="," property="protype">
+				ProType = #protype#
+			</isNotNull>
+			<isNotNull prepend="," property="cmd1">
+				Cmd1 = #cmd1#
+			</isNotNull>
+			<isNotNull prepend="," property="cmd">
+				Cmd = #cmd#
+			</isNotNull>
+			<isNotNull prepend="," property="paramcode">
+				ParamCode = #paramcode#
+			</isNotNull>
+			<isNotNull prepend="," property="paramname">
+				ParamName = #paramname#
+			</isNotNull>
+			<isNotNull prepend="," property="note">
+				Note = #note#
+			</isNotNull>
+		</dynamic>
+		WHERE CmdSubID = #cmdsubid#
+	</update>
+	<!-- 命令策略从表 操作相关sql end -->
+	
+	<!-- 列表 -->
+	<select id="queryItemForSelect" parameterClass="dto" resultClass="dto">
+		SELECT 	
+			t.moncodeid, 
+			t1.name, 
+			t.paramclass, 
+			t.paramcode, 
+			t.paramname, 
+			t.detail
+		FROM moncode t LEFT JOIN basetable t1 ON t1.Code = t.ParamClass AND t1.Type='202' 
+		WHERE 1 = 1 and protype = #protype#
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and t.paramclass = #paramclass#  
+			</isNotEmpty>
+		</dynamic>
+		Order by t.paramclass ASC, t.paramcode ASC
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="queryItemForSelectCount" parameterClass="dto" resultClass="java.lang.Integer">
+		Select count(1) 
+		from moncode
+		WHERE 1 = 1 and protype = #protype#
+		<dynamic>
+			<isNotEmpty property="paramclass"> 
+				and paramclass = #paramclass#  
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+</sqlMap>

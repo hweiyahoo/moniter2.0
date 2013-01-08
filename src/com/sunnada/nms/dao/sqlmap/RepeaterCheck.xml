@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+<!-- 轮询报表 -->
+<sqlMap namespace="repeaterCheck">
+	<typeAlias alias="dto" type="org.eredlab.g4.ccl.datastructure.impl.BaseDto" />
+	
+	<!-- 列表 -->
+	<select id="checkItem" parameterClass="dto" resultClass="dto">
+	</select>
+	
+	<!-- 列表 -->
+	<select id="queryItemForList" parameterClass="dto" resultClass="dto">
+		SELECT
+		  a.pollployname,
+		  DATE_FORMAT(a.pollbegintime,'%Y-%m-%d %T') AS pollbegintime,
+		  d.paramname,
+		  value,
+		  time,
+		  c.repeaterid,
+		  c.protype,
+		  t1.proname,
+		  c.devicetype,
+		  t2.hardname,
+		  c.stationid,
+		  c.stationname,
+		  c.statsubid,
+		  c.province,
+		  t3.sitename   AS provincename,
+		  c.city,
+		  t4.sitename   AS cityname,
+		  c.stattel		  
+		FROM pollreport b
+		  LEFT JOIN pollploy a ON a.pollPloyID = b.pollid
+		  LEFT JOIN repeaterinfo c ON b.repeaterid = c.RepeaterID
+		  LEFT JOIN repeaterparam d ON b.repeaterid = d.RepeaterID AND b.paramcode = d.ParamCode
+		  LEFT JOIN protocol t1 ON c.ProType = t1.ProType
+		  LEFT JOIN devicetype t2 ON t2.DeviceType = c.DeviceType AND t2.ProType = t1.ProType
+		  LEFT JOIN site t3 ON t3.sitecode = c.Province AND t3.ParentSite = '00' AND t3.type=1
+		  LEFT JOIN site t4 ON t4.sitecode = c.City AND t4.ParentSite = c.Province AND t4.type=1		  
+		WHERE 1=1
+		<isNotEmpty property="pollployid">
+			and a.pollployid=#pollployid#
+		</isNotEmpty>
+		<isNotEmpty property="beginchecktime">
+			AND a.pollbegintime like '%$beginchecktime$%'
+		</isNotEmpty>
+		<isNotEmpty property="endchecktime">
+			AND time  like '%$endchecktime$%'
+		</isNotEmpty>
+		<isNotEmpty property="repeaterid">
+			AND b.repeaterid=#repeaterid#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 总记录数 -->
+	<select id="queryItemForCount" parameterClass="dto" resultClass="java.lang.Integer">
+		SELECT
+		  count(*)
+		FROM pollreport b
+		  LEFT JOIN pollploy a ON a.pollPloyID = b.pollid
+		  LEFT JOIN repeaterinfo c ON b.repeaterid = c.RepeaterID
+		  LEFT JOIN repeaterparam d ON b.repeaterid = d.RepeaterID AND b.paramcode = d.ParamCode
+		WHERE 1=1
+		<isNotEmpty property="pollployid">
+			and a.pollployid=#pollployid#
+		</isNotEmpty>
+		<isNotEmpty property="beginchecktime">
+			AND a.pollbegintime like '%$beginchecktime$%'  
+		</isNotEmpty>
+		<isNotEmpty property="endchecktime">
+			AND time  like '%$endchecktime$%'
+		</isNotEmpty>
+		<isNotEmpty property="repeaterid">
+			AND b.repeaterid=#repeaterid#
+		</isNotEmpty>
+	</select>
+	
+	<!-- 删除 -->
+	<delete id="deleteItem" parameterClass="dto">
+	
+	</delete>
+	
+	<!-- 添加 -->
+	<insert id="insertItem" parameterClass="dto">
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="updateItem" parameterClass="dto">
+	</update>
+	
+	<!-- 轮询名称 -->
+	<select id="pollName" parameterClass="dto" resultClass="dto">
+		SELECT pollployname TEXT,pollployid VALUE FROM pollploy
+	</select>
+	
+	<!-- 指定的轮询策略站点名称 -->
+	<select id="repeaterName" parameterClass="dto" resultClass="dto">
+		SELECT  a.repeaterid VALUE,b.StationName TEXT FROM circle a,repeaterinfo b WHERE pollployid=#pollployid# AND a.RepeaterID=b.RepeaterID
+	</select>
+	
+	<!-- 指定的轮询策略开始时间 -->
+	<select id="repeaterBegintime" parameterClass="dto" resultClass="dto">
+		SELECT DATE_FORMAT(pollBeginTime,'%Y-%m-%d %H:%i:%s') AS VALUE,DATE_FORMAT(pollBeginTime,'%Y-%m-%d %H:%i:%s') AS TEXT FROM pollploy WHERE pollployid=#pollployid# GROUP BY pollBeginTime
+	</select>
+	
+	<!-- 指定的轮询策略接收时间 -->
+	<select id="repeaterEndtime" parameterClass="dto" resultClass="dto">
+		SELECT DATE_FORMAT(TIME,'%Y-%m-%d %H:%i') AS VALUE,DATE_FORMAT(TIME,'%Y-%m-%d %H:%i') AS TEXT FROM pollreport WHERE pollid=#pollployid# GROUP BY TIME
+	</select>
+</sqlMap>

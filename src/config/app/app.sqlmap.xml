@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//iBATIS.com//DTD SQL Map Config 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+<!-- 业务系统的SQL映射文件装载 -->
+<sqlMapConfig>
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/DeviceType.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/BaseStatMgr.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/BaseMonCode.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/RespFlag.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/MaintainMan.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/CmdTitle.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/CmdPrase.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/NmsCombox.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/RepeaterPollCfg.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/CommInfo.xml" />
+	<sqlMap
+		resource="com/sunnada/nms/dao/sqlmap/InitBusinessParams.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/DeviceMonitor.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/EditorMng.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/toastMng.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/NoticeProc.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/map.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/Memo.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/deviceMag.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/RvalUpdateDB.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/Shield.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/DevComData.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/updatedevicefile.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/FactoryInfo.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/ProType.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/Site.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/AlarmLog.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/AlarmStatistics.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/AlarmState.xml" />
+	<sqlMap
+		resource="com/sunnada/nms/dao/sqlmap/RepeaterStatistics.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/RepeaterCheck.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/DevSetBoardInit.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/BtnConnectClick.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/Notice.xml" />
+	<sqlMap resource="com/sunnada/nms/dao/sqlmap/Receive.xml" />
+</sqlMapConfig>

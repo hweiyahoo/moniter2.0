@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN" "http://struts.apache.org/dtds/struts-config_1_3.dtd">
+<struts-config>
+	<!-- 配置ActionFormBean -->
+	<form-beans>
+		<!-- 公共Form -->
+		<form-bean name="commonActionForm" type="org.eredlab.g4.rif.web.CommonActionForm" />
+	</form-beans>
+
+	<!-- Action映射 -->
+	<action-mappings type="org.apache.struts.action.ActionMapping">
+		<!-- 设备类型 -->
+		<action name="commonActionForm" path="/devicetype" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.DeviceTypeAction">
+			<forward name="DeviceTypeMainInit" path="/nms/cfg/deviceTypeMain.jsp" />
+		</action>
+		
+		<!-- 基站管理 -->
+		<action name="commonActionForm" path="/basestatmgr" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.base.web.BaseStatMgrAction">
+			<forward name="BaseStatMgrInit" path="/nms/base/baseStatMgr.jsp" />
+		</action>
+		
+		<!-- 代维人员管理 -->
+		<action name="commonActionForm" path="/maintainman" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.base.web.MaintainManAction">
+			<forward name="MaintainManInit" path="/nms/base/maintainMan.jsp" />
+		</action>
+		
+		<!-- 监控标识号 -->
+		<action name="commonActionForm" path="/basemoncode" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.BaseMonCodeAction">
+			<forward name="BaseMonCodeMainInit" path="/nms/cfg/baseMonCode.jsp" />
+		</action>
+		
+		<!-- 命令头维护 -->
+		<action name="commonActionForm" path="/cmdtitle" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.CmdTitleAction">
+			<forward name="CmdTitleMainInit" path="/nms/cfg/cmdTitle.jsp" />
+		</action>
+		
+		<!-- 应答标识 -->
+		<action name="commonActionForm" path="/respflag" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.RespFlagAction">
+			<forward name="RespFlagMainInit" path="/nms/cfg/respFlag.jsp" />
+		</action>
+		
+		<!-- 通讯参数配置 -->
+		<action name="commonActionForm" path="/comconfig" scope="request" validate="false" parameter="reqCode"
+			type="com.sunnada.nms.cfg.web.ComConfigAction">
+			<forward name="ComConfigMainInit" path="/nms/cfg/comConfig.jsp" />
+		</action>
+	</action-mappings>
+	
+</struts-config>

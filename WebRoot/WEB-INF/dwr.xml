@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dwr PUBLIC "-//GetAhead Limited//DTD Direct Web Remoting 2.0//EN" "http://getahead.org/dwr/dwr20.dtd">
+<dwr>
+	<allow>
+		<create creator="new" javascript="toastManager" scope="application">
+			 <param name="class" value="com.sunnada.nms.dwrcomet.web.ToastMessagePush"/>
+		</create>
+	</allow>
+	
+	<allow>
+		<create creator="new" javascript="DMParamPush" scope="application">
+			 <param name="class" value="com.sunnada.nms.dwrcomet.web.DeviceMonitorPush"/>
+		</create>
+	</allow>
+	
+	<allow>
+		<create creator="new" javascript="PollployPush" scope="application">
+			 <param name="class" value="com.sunnada.nms.dwrcomet.web.PollployPush"/>
+		</create>
+	</allow>
+</dwr>
+
+
